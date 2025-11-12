@@ -290,6 +290,52 @@
         }
       }
     },
+    "dimensionlabels1": {
+      "process_id": "dimension_labels",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension4"
+        },
+        "dimension": "bands"
+      }
+    },
+    "arrayapply1": {
+      "process_id": "array_apply",
+      "arguments": {
+        "data": {
+          "from_node": "dimensionlabels1"
+        },
+        "process": {
+          "process_graph": {
+            "textconcat1": {
+              "process_id": "text_concat",
+              "arguments": {
+                "data": "MREF",
+                "separator": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "renamelabels1": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension4"
+        },
+        "dimension": "bands",
+        "source": {
+          "from_node": "dimensionlabels1"
+        },
+        "target": {
+          "from_node": "arrayapply1"
+        }
+      }
+    },
     "filterbands2": {
       "process_id": "filter_bands",
       "arguments": {
@@ -332,14 +378,60 @@
         }
       }
     },
+    "dimensionlabels2": {
+      "process_id": "dimension_labels",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension5"
+        },
+        "dimension": "bands"
+      }
+    },
+    "arrayapply2": {
+      "process_id": "array_apply",
+      "arguments": {
+        "data": {
+          "from_node": "dimensionlabels2"
+        },
+        "process": {
+          "process_graph": {
+            "textconcat2": {
+              "process_id": "text_concat",
+              "arguments": {
+                "data": "MREF-STD",
+                "separator": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "renamelabels2": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension5"
+        },
+        "dimension": "bands",
+        "source": {
+          "from_node": "dimensionlabels2"
+        },
+        "target": {
+          "from_node": "arrayapply2"
+        }
+      }
+    },
     "mergecubes2": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "reducedimension4"
+          "from_node": "renamelabels1"
         },
         "cube2": {
-          "from_node": "reducedimension5"
+          "from_node": "renamelabels2"
         }
       }
     },
@@ -878,6 +970,52 @@
         }
       }
     },
+    "dimensionlabels3": {
+      "process_id": "dimension_labels",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension11"
+        },
+        "dimension": "bands"
+      }
+    },
+    "arrayapply3": {
+      "process_id": "array_apply",
+      "arguments": {
+        "data": {
+          "from_node": "dimensionlabels3"
+        },
+        "process": {
+          "process_graph": {
+            "textconcat3": {
+              "process_id": "text_concat",
+              "arguments": {
+                "data": "SRC",
+                "separator": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "renamelabels3": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension11"
+        },
+        "dimension": "bands",
+        "source": {
+          "from_node": "dimensionlabels3"
+        },
+        "target": {
+          "from_node": "arrayapply3"
+        }
+      }
+    },
     "mergecubes4": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -885,7 +1023,7 @@
           "from_node": "mergecubes2"
         },
         "cube2": {
-          "from_node": "reducedimension11"
+          "from_node": "renamelabels3"
         }
       }
     },
@@ -911,6 +1049,52 @@
         }
       }
     },
+    "dimensionlabels4": {
+      "process_id": "dimension_labels",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension12"
+        },
+        "dimension": "bands"
+      }
+    },
+    "arrayapply4": {
+      "process_id": "array_apply",
+      "arguments": {
+        "data": {
+          "from_node": "dimensionlabels4"
+        },
+        "process": {
+          "process_graph": {
+            "textconcat4": {
+              "process_id": "text_concat",
+              "arguments": {
+                "data": "SRC-STD",
+                "separator": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "renamelabels4": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension12"
+        },
+        "dimension": "bands",
+        "source": {
+          "from_node": "dimensionlabels4"
+        },
+        "target": {
+          "from_node": "arrayapply4"
+        }
+      }
+    },
     "mergecubes5": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -918,7 +1102,7 @@
           "from_node": "mergecubes4"
         },
         "cube2": {
-          "from_node": "reducedimension12"
+          "from_node": "renamelabels4"
         }
       }
     },
@@ -1057,6 +1241,52 @@
         "type": "bands"
       }
     },
+    "dimensionlabels5": {
+      "process_id": "dimension_labels",
+      "arguments": {
+        "data": {
+          "from_node": "adddimension3"
+        },
+        "dimension": "bands"
+      }
+    },
+    "arrayapply5": {
+      "process_id": "array_apply",
+      "arguments": {
+        "data": {
+          "from_node": "dimensionlabels5"
+        },
+        "process": {
+          "process_graph": {
+            "textconcat5": {
+              "process_id": "text_concat",
+              "arguments": {
+                "data": "SFREQ",
+                "separator": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "renamelabels5": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "adddimension3"
+        },
+        "dimension": "bands",
+        "source": {
+          "from_node": "dimensionlabels5"
+        },
+        "target": {
+          "from_node": "arrayapply5"
+        }
+      }
+    },
     "mergecubes7": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -1064,7 +1294,7 @@
           "from_node": "mergecubes5"
         },
         "cube2": {
-          "from_node": "adddimension3"
+          "from_node": "renamelabels5"
         }
       },
       "result": true
