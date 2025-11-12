@@ -290,34 +290,23 @@
         }
       }
     },
-    "dimensionlabels1": {
-      "process_id": "dimension_labels",
+    "filterbands2": {
+      "process_id": "filter_bands",
       "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
         "data": {
           "from_node": "reducedimension4"
-        },
-        "dimension": "bands"
-      }
-    },
-    "arrayapply1": {
-      "process_id": "array_apply",
-      "arguments": {
-        "data": {
-          "from_node": "dimensionlabels1"
-        },
-        "process": {
-          "process_graph": {
-            "textconcat1": {
-              "process_id": "text_concat",
-              "arguments": {
-                "data": "MREF",
-                "separator": {
-                  "from_parameter": "x"
-                }
-              },
-              "result": true
-            }
-          }
         }
       }
     },
@@ -325,18 +314,36 @@
       "process_id": "rename_labels",
       "arguments": {
         "data": {
-          "from_node": "reducedimension4"
+          "from_node": "filterbands2"
         },
         "dimension": "bands",
-        "source": {
-          "from_node": "dimensionlabels1"
-        },
-        "target": {
-          "from_node": "arrayapply1"
-        }
+        "source": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "target": [
+          "MREF_B02",
+          "MREF_B03",
+          "MREF_B04",
+          "MREF_B05",
+          "MREF_B06",
+          "MREF_B07",
+          "MREF_B08",
+          "MREF_B8A",
+          "MREF_B11",
+          "MREF_B12"
+        ]
       }
     },
-    "filterbands2": {
+    "filterbands3": {
       "process_id": "filter_bands",
       "arguments": {
         "bands": [
@@ -360,7 +367,7 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "filterbands2"
+          "from_node": "filterbands3"
         },
         "dimension": "t",
         "reducer": {
@@ -378,34 +385,23 @@
         }
       }
     },
-    "dimensionlabels2": {
-      "process_id": "dimension_labels",
+    "filterbands4": {
+      "process_id": "filter_bands",
       "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
         "data": {
           "from_node": "reducedimension5"
-        },
-        "dimension": "bands"
-      }
-    },
-    "arrayapply2": {
-      "process_id": "array_apply",
-      "arguments": {
-        "data": {
-          "from_node": "dimensionlabels2"
-        },
-        "process": {
-          "process_graph": {
-            "textconcat2": {
-              "process_id": "text_concat",
-              "arguments": {
-                "data": "MREF-STD",
-                "separator": {
-                  "from_parameter": "x"
-                }
-              },
-              "result": true
-            }
-          }
         }
       }
     },
@@ -413,15 +409,33 @@
       "process_id": "rename_labels",
       "arguments": {
         "data": {
-          "from_node": "reducedimension5"
+          "from_node": "filterbands4"
         },
         "dimension": "bands",
-        "source": {
-          "from_node": "dimensionlabels2"
-        },
-        "target": {
-          "from_node": "arrayapply2"
-        }
+        "source": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "target": [
+          "MREF-STD_B02",
+          "MREF-STD_B03",
+          "MREF-STD_B04",
+          "MREF-STD_B05",
+          "MREF-STD_B06",
+          "MREF-STD_B07",
+          "MREF-STD_B08",
+          "MREF-STD_B8A",
+          "MREF-STD_B11",
+          "MREF-STD_B12"
+        ]
       }
     },
     "mergecubes2": {
@@ -970,34 +984,23 @@
         }
       }
     },
-    "dimensionlabels3": {
-      "process_id": "dimension_labels",
+    "filterbands5": {
+      "process_id": "filter_bands",
       "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
         "data": {
           "from_node": "reducedimension11"
-        },
-        "dimension": "bands"
-      }
-    },
-    "arrayapply3": {
-      "process_id": "array_apply",
-      "arguments": {
-        "data": {
-          "from_node": "dimensionlabels3"
-        },
-        "process": {
-          "process_graph": {
-            "textconcat3": {
-              "process_id": "text_concat",
-              "arguments": {
-                "data": "SRC",
-                "separator": {
-                  "from_parameter": "x"
-                }
-              },
-              "result": true
-            }
-          }
         }
       }
     },
@@ -1005,15 +1008,33 @@
       "process_id": "rename_labels",
       "arguments": {
         "data": {
-          "from_node": "reducedimension11"
+          "from_node": "filterbands5"
         },
         "dimension": "bands",
-        "source": {
-          "from_node": "dimensionlabels3"
-        },
-        "target": {
-          "from_node": "arrayapply3"
-        }
+        "source": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "target": [
+          "SRC_B02",
+          "SRC_B03",
+          "SRC_B04",
+          "SRC_B05",
+          "SRC_B06",
+          "SRC_B07",
+          "SRC_B08",
+          "SRC_B8A",
+          "SRC_B11",
+          "SRC_B12"
+        ]
       }
     },
     "mergecubes4": {
@@ -1049,34 +1070,23 @@
         }
       }
     },
-    "dimensionlabels4": {
-      "process_id": "dimension_labels",
+    "filterbands6": {
+      "process_id": "filter_bands",
       "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
         "data": {
           "from_node": "reducedimension12"
-        },
-        "dimension": "bands"
-      }
-    },
-    "arrayapply4": {
-      "process_id": "array_apply",
-      "arguments": {
-        "data": {
-          "from_node": "dimensionlabels4"
-        },
-        "process": {
-          "process_graph": {
-            "textconcat4": {
-              "process_id": "text_concat",
-              "arguments": {
-                "data": "SRC-STD",
-                "separator": {
-                  "from_parameter": "x"
-                }
-              },
-              "result": true
-            }
-          }
         }
       }
     },
@@ -1084,15 +1094,33 @@
       "process_id": "rename_labels",
       "arguments": {
         "data": {
-          "from_node": "reducedimension12"
+          "from_node": "filterbands6"
         },
         "dimension": "bands",
-        "source": {
-          "from_node": "dimensionlabels4"
-        },
-        "target": {
-          "from_node": "arrayapply4"
-        }
+        "source": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "target": [
+          "SRC-STD_B02",
+          "SRC-STD_B03",
+          "SRC-STD_B04",
+          "SRC-STD_B05",
+          "SRC-STD_B06",
+          "SRC-STD_B07",
+          "SRC-STD_B08",
+          "SRC-STD_B8A",
+          "SRC-STD_B11",
+          "SRC-STD_B12"
+        ]
       }
     },
     "mergecubes5": {
@@ -1241,52 +1269,6 @@
         "type": "bands"
       }
     },
-    "dimensionlabels5": {
-      "process_id": "dimension_labels",
-      "arguments": {
-        "data": {
-          "from_node": "adddimension3"
-        },
-        "dimension": "bands"
-      }
-    },
-    "arrayapply5": {
-      "process_id": "array_apply",
-      "arguments": {
-        "data": {
-          "from_node": "dimensionlabels5"
-        },
-        "process": {
-          "process_graph": {
-            "textconcat5": {
-              "process_id": "text_concat",
-              "arguments": {
-                "data": "SFREQ",
-                "separator": {
-                  "from_parameter": "x"
-                }
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
-    "renamelabels5": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "adddimension3"
-        },
-        "dimension": "bands",
-        "source": {
-          "from_node": "dimensionlabels5"
-        },
-        "target": {
-          "from_node": "arrayapply5"
-        }
-      }
-    },
     "mergecubes7": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -1294,7 +1276,7 @@
           "from_node": "mergecubes5"
         },
         "cube2": {
-          "from_node": "renamelabels5"
+          "from_node": "adddimension3"
         }
       },
       "result": true
