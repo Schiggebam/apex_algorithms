@@ -257,8 +257,8 @@
         },
         "overlap_resolver": {
           "process_graph": {
-            "gt1": {
-              "process_id": "gt",
+            "subtract1": {
+              "process_id": "subtract",
               "arguments": {
                 "x": {
                   "from_parameter": "x"
@@ -273,6 +273,28 @@
         }
       }
     },
+    "apply2": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "mergecubes1"
+        },
+        "process": {
+          "process_graph": {
+            "gt1": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
     "mask2": {
       "process_id": "mask",
       "arguments": {
@@ -280,7 +302,7 @@
           "from_node": "mask1"
         },
         "mask": {
-          "from_node": "mergecubes1"
+          "from_node": "apply2"
         }
       }
     },
