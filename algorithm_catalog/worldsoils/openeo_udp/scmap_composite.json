@@ -22,7 +22,7 @@
           "from_parameter": "bounding_box"
         },
         "temporal_extent": {
-          "from_parameter": "temporal_extend"
+          "from_parameter": "temporal_extent"
         }
       }
     },
@@ -162,7 +162,7 @@
   ],
   "parameters": [
     {
-      "name": "temporal_extend",
+      "name": "temporal_extent",
       "description": "Lorem Ipsum",
       "schema": {
         "type": "array",

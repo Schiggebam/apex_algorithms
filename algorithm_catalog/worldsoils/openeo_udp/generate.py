@@ -81,7 +81,7 @@ def generate() -> dict:
     con: Connection = auth()
 
     temporal_extent = Parameter.temporal_interval(
-        name="temporal_extend",
+        name="temporal_extent",
         description=d_description["te"]
     )
     spatial_extent = Parameter.bounding_box(
@@ -133,7 +133,7 @@ def test_run():
     temporal_extent = ["2025-03-15", "2025-05-07"]
     composite = con.datacube_from_process(
         "scmap_composite", 
-        namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap.json",
+        namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap_composite.json",
         temporal_extent=temporal_extent,
         aoi=bbox,
     )
@@ -141,6 +141,9 @@ def test_run():
 
 
 if __name__ == "__main__":
+    if False:
+        test_run()
+        exit()
     # save process to json
     with open(Path(__file__).parent / "scmap_composite.json", "w") as fp:
         json.dump(generate(), fp, indent=2)
