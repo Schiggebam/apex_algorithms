@@ -101,7 +101,7 @@ def composite(con: Connection,
     pvir2 = ndvi + nbr
 
     mask = s2_cube > thresholds
-    s2_cube.mask(mask)
+    s2_cube = s2_cube.mask(mask)
 
     value = 3.1415
 
