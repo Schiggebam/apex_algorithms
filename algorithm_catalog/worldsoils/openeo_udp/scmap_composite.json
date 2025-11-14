@@ -1,0 +1,259 @@
+{
+  "process_graph": {
+    "loadcollection1": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12",
+          "SCL",
+          "sunZenithAngles"
+        ],
+        "id": "SENTINEL2_L2A",
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": {
+          "from_parameter": "temporal_extend"
+        }
+      }
+    },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement1": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 10
+              }
+            },
+            "eq1": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 4
+              }
+            },
+            "eq2": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 5
+              }
+            },
+            "or1": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "eq1"
+                },
+                "y": {
+                  "from_node": "eq2"
+                }
+              }
+            },
+            "eq3": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 6
+              }
+            },
+            "or2": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "or1"
+                },
+                "y": {
+                  "from_node": "eq3"
+                }
+              }
+            },
+            "not1": {
+              "process_id": "not",
+              "arguments": {
+                "x": {
+                  "from_node": "or2"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mask1": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "mask": {
+          "from_node": "reducedimension1"
+        }
+      }
+    },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "mask1"
+        },
+        "process": {
+          "process_graph": {
+            "runudf1": {
+              "process_id": "run_udf",
+              "arguments": {
+                "context": {
+                  "value": 3.1415
+                },
+                "data": {
+                  "from_parameter": "x"
+                },
+                "runtime": "Python",
+                "udf": "import xarray as xr\nimport numpy as np\nfrom openeo.udf.xarraydatacube import XarrayDataCube\n\n\ndef generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:\n    \"\"\"\n    Lorem Ipsum\n    :param xarr: abc\n    :param value: abc\n    :return: Datacube \n    \"\"\"\n    result = xarr.copy()                             # same as input\n    result.values = np.zeros(xarr.values)            # exchange data\n    return XarrayDataCube(result)\n\ndef apply_datacube(cube: XarrayDataCube, context) -> XarrayDataCube:\n    value = context.get('value', None)\n\n    return generate_composite(xarr=cube.get_array(), value=value)"
+              },
+              "result": true
+            }
+          }
+        }
+      },
+      "result": true
+    }
+  },
+  "id": "scmap_composite",
+  "summary": "Bare surface composite with statistical producs",
+  "description": "Author: paul.karlshoefer@dlr.de\n\nLorem Ipsum",
+  "returns": {
+    "description": "Bare surface composite with statistical producs",
+    "schema": {
+      "type": "object",
+      "subtype": "datacube"
+    }
+  },
+  "categories": [
+    "sentinel-2",
+    "composites",
+    "bare surface"
+  ],
+  "parameters": [
+    {
+      "name": "temporal_extend",
+      "description": "Lorem Ipsum",
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval",
+        "uniqueItems": true,
+        "minItems": 2,
+        "maxItems": 2,
+        "items": {
+          "anyOf": [
+            {
+              "type": "string",
+              "subtype": "date-time",
+              "format": "date-time"
+            },
+            {
+              "type": "string",
+              "subtype": "date",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "bounding_box",
+      "description": "Lorem Ipsum",
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box",
+        "required": [
+          "west",
+          "south",
+          "east",
+          "north"
+        ],
+        "properties": {
+          "west": {
+            "type": "number",
+            "description": "West (lower left corner, coordinate axis 1)."
+          },
+          "south": {
+            "type": "number",
+            "description": "South (lower left corner, coordinate axis 2)."
+          },
+          "east": {
+            "type": "number",
+            "description": "East (upper right corner, coordinate axis 1)."
+          },
+          "north": {
+            "type": "number",
+            "description": "North (upper right corner, coordinate axis 2)."
+          },
+          "crs": {
+            "description": "Coordinate reference system of the extent, specified as as [EPSG code](http://www.epsg-registry.org/) or [WKT2 CRS string](http://docs.opengeospatial.org/is/18-010r7/18-010r7.html). Defaults to `4326` (EPSG code 4326) unless the client explicitly requests a different coordinate reference system.",
+            "anyOf": [
+              {
+                "type": "integer",
+                "subtype": "epsg-code",
+                "title": "EPSG Code",
+                "minimum": 1000
+              },
+              {
+                "type": "string",
+                "subtype": "wkt2-definition",
+                "title": "WKT2 definition"
+              }
+            ],
+            "default": 4326
+          }
+        }
+      },
+      "default": {
+        "west": 11.1,
+        "south": 48.0,
+        "east": 11.3,
+        "north": 48.2,
+        "crs": "EPSG:4326"
+      },
+      "optional": true
+    },
+    {
+      "name": "max_cloud_cover",
+      "description": "Maximum allowed scene-wide cloud cover for the scene to be considered in the composite",
+      "schema": {
+        "type": "number"
+      },
+      "default": 80,
+      "optional": true
+    }
+  ]
+}

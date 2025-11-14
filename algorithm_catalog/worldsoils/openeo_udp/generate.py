@@ -65,6 +65,10 @@ def composite(con: Connection,
         }
     )
 
+    scm_composite = s2_cube.apply(process=udf_process)
+
+    return scm_composite
+
 
 def auth(url: str="openeo.dataspace.copernicus.eu") -> Connection:
     connection = openeo.connect(url=url)
@@ -98,9 +102,43 @@ def generate() -> dict:
         max_cloud_cover=max_scene_cloud_cover
     )
 
+    schema = {
+        "description": "Bare surface composite with statistical producs",
+        "schema": {
+            "type": "object",
+            "subtype": "datacube"
+        }
+    }
+
+    return build_process_dict(
+        process_graph=scmap_composite,
+        process_id="scmap_composite",
+        summary="Bare surface composite with statistical producs",
+        description=(
+            Path(__file__).parent / "Readme.md"
+        ).read_text(),
+        parameters=[
+            temporal_extent,
+            spatial_extent,
+            max_scene_cloud_cover,
+        ],
+        returns=schema,
+        categories=["sentinel-2", "composites", "bare surface"]
+    )
+
 
 def test_run():
-    pass
+    con = auth()
+    bbox = { "west": 11.15, "south": 48.05, "east": 11.3, "north": 48.2, "crs": "EPSG:4326"}
+    temporal_extent = ["2025-03-15", "2025-05-07"]
+    composite = con.datacube_from_process(
+        "scmap_composite", 
+        namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap.json",
+        temporal_extent=temporal_extent,
+        aoi=bbox,
+    )
+    composite.execute_batch()
+
 
 if __name__ == "__main__":
     # save process to json
