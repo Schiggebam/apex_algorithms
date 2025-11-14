@@ -34,8 +34,8 @@ def generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:
     :return: Datacube 
     """
 
-    b_bands = [b for b in xarr.band.values if b.startswith("B") and len(b) == 3]
-    xarr_reflectance = xarr.sel(band=b_bands)
+    b_bands = [b for b in xarr.bands.values if b.startswith("B") and len(b) == 3]
+    xarr_reflectance = xarr.sel(bands=b_bands)
 
     th = .2
     idx = _pvir2(xarr_reflectance)
