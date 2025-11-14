@@ -23,7 +23,7 @@ def apply_datacube(cube: XarrayDataCube, context: Dict) -> XarrayDataCube:
     # --- Ensure threshold image broadcasts properly ---
     # If threshold is 2D (x,y) but pvir2 is 3D (t,x,y), broadcast:
     if "t" not in th.dims:
-        th = th.expand_dims({"t": pvir2.t})  # broadcast temporally
+        th = th.expand_dims({"t": pvir2.coords["t"].values})  # broadcast temporally
 
     # --- Build mask ---
     # True where pixel should be masked
