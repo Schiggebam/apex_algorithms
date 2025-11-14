@@ -144,7 +144,7 @@ def test_run():
 
 
 if __name__ == "__main__":
-    if False:
+    if True:
         test_run()
         exit()
     # save process to json

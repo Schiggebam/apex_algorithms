@@ -13,8 +13,10 @@ def generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:
     """
     print(xarr)
 
-    result = xarr.copy()                             # same as input
-    result.values = np.zeros(xarr.values)            # exchange data
+    time_dit = "t"
+
+     
+    result = xarr.mean(dim=time_dim, skipna=True)    # keepdims=False
     return XarrayDataCube(result)
 
 def apply_datacube(cube: XarrayDataCube, context: Dict) -> XarrayDataCube:

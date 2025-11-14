@@ -136,7 +136,7 @@
                   "from_parameter": "data"
                 },
                 "runtime": "Python",
-                "udf": "import xarray as xr\nimport numpy as np\nfrom openeo.udf.xarraydatacube import XarrayDataCube\n\nfrom typing import Dict\n\ndef generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:\n    \"\"\"\n    Lorem Ipsum\n    :param xarr: abc\n    :param value: abc\n    :return: Datacube \n    \"\"\"\n    print(xarr)\n\n    result = xarr.copy()                             # same as input\n    result.values = np.zeros(xarr.values)            # exchange data\n    return XarrayDataCube(result)\n\ndef apply_datacube(cube: XarrayDataCube, context: Dict) -> XarrayDataCube:\n    value = context.get('value', None)\n\n    return generate_composite(xarr=cube.get_array(), value=value)",
+                "udf": "import xarray as xr\nimport numpy as np\nfrom openeo.udf.xarraydatacube import XarrayDataCube\n\nfrom typing import Dict\n\ndef generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:\n    \"\"\"\n    Lorem Ipsum\n    :param xarr: abc\n    :param value: abc\n    :return: Datacube \n    \"\"\"\n    print(xarr)\n\n    time_dit = \"t\"\n\n\n    result = xarr.mean(dim=time_dim, skipna=True)    # keepdims=False\n    return XarrayDataCube(result)\n\ndef apply_datacube(cube: XarrayDataCube, context: Dict) -> XarrayDataCube:\n    value = context.get('value', None)\n\n    return generate_composite(xarr=cube.get_array(), value=value)",
                 "version": "3.8"
               },
               "result": true
