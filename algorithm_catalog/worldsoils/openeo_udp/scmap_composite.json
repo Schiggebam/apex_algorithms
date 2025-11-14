@@ -408,6 +408,17 @@
         }
       }
     },
+    "adddimension2": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension2"
+        },
+        "label": "th_img",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
     "mergecubes2": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -415,7 +426,7 @@
           "from_node": "mergecubes1"
         },
         "cube2": {
-          "from_node": "reducedimension2"
+          "from_node": "adddimension2"
         }
       }
     },
@@ -434,7 +445,7 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "label": "pvir2"
+                "index": 10
               }
             },
             "arrayelement5": {
@@ -443,7 +454,7 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "label": "th_img"
+                "index": 11
               }
             },
             "subtract3": {

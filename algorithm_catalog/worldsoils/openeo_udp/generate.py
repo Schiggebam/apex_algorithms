@@ -106,7 +106,7 @@ def composite(con: Connection,
     th_named = thresholds.add_dimension(name="bands", label="th_img", type="bands")
 
     s2_merged = s2_merged.merge_cubes(pvir2_named)
-    s2_merged = s2_merged.merge_cubes(thresholds)
+    s2_merged = s2_merged.merge_cubes(th_named)
     
     
     # th = 0.2
@@ -205,7 +205,7 @@ def test_run():
 
 
 if __name__ == "__main__":
-    if True:
+    if False:
         test_run()
         exit()
     # save process to json
