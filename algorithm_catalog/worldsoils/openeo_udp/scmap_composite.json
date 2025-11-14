@@ -370,24 +370,13 @@
                 }
               }
             },
-            "arrayelement4": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 10
-              }
-            },
             "subtract3": {
               "process_id": "subtract",
               "arguments": {
                 "x": {
                   "from_node": "add3"
                 },
-                "y": {
-                  "from_node": "arrayelement4"
-                }
+                "y": 0.2
               }
             },
             "gt1": {

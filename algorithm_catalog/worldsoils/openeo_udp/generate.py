@@ -103,8 +103,10 @@ def composite(con: Connection,
     pvir2 = ndvi + nbr
 
     
-    th = s2_merged.band("S2_s2cr_pvir2_threshold_img")
     
+    # th = s2_merged.band("S2_s2cr_pvir2_threshold_img")
+    th = 0.2
+
     mask = pvir2 - th > 0
     s2_masked = s2_merged.mask(mask)
 
