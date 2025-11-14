@@ -85,7 +85,8 @@ def composite(con: Connection,
     ### Threshold image ###
     stac_url_th_img = "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip.json"
     th_item = con.load_stac(stac_url_th_img, bands=["S2_s2cr_pvir2_threshold_img"], spatial_extent=spatial_extent)
-    thresholds = th_item.resample_cube_spatial(s2_cube, method="bilinear")
+    thresholds = th_item.resample_cube_spatial(s2_cube, method="bilinear").reduce_dimension(dimension="bands", reducer="first")
+
     # s2_cube = s2_cube.merge_cubes(thresholds)
 
     # b_scl = s2_cube.band("SCL")
@@ -102,12 +103,15 @@ def composite(con: Connection,
     nbr   = (b_08 - b_12) / (b_08 + b_12)
     pvir2 = ndvi + nbr
     pvir2_named = pvir2.add_dimension(name="bands", label="pvir2", type="bands")
+    
+
     s2_merged = s2_merged.merge_cubes(pvir2_named)
     
-    # th = s2_merged.band("S2_s2cr_pvir2_threshold_img")
-    th = 0.2
+    
+    th = s2_merged.band("S2_s2cr_pvir2_threshold_img")
+    # th = 0.2
 
-    mask = pvir2 - th > 0
+    mask = s2_merged.band("pvir2") - th > 0
     s2_masked = s2_merged.mask(mask)
 
     value = 3.1415
