@@ -48,9 +48,9 @@ def apply_datacube(cube: XarrayDataCube, context: dict) -> XarrayDataCube:
     refl_masked = xr.where(mask, np.nan, refl)
 
     # --- Reduce time dimension ---
-    # refl_mean = refl_masked.mean(dim="t", skipna=True)
+    refl_mean = refl_masked.mean(dim="t", skipna=True)
 
-    return XarrayDataCube(refl_masked)
+    return XarrayDataCube(refl_mean)
 
 
 # def apply_datacube(cube: XarrayDataCube, context: dict) -> XarrayDataCube:
