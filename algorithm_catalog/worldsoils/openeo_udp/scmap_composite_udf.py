@@ -40,7 +40,7 @@ def generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:
 
     th = .2
     idx = _pvir2(xarr_reflectance)
-    cond_idx = (idx > th_img).broadcast_like(xarr_reflectance)
+    cond_idx = (idx > .2).broadcast_like(xarr_reflectance)
 
     xarr_reflectance = xr.where(cond_idx, np.nan, xarr_reflectance)
 
@@ -59,5 +59,7 @@ def generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:
 
 def apply_datacube(cube: XarrayDataCube, context: Dict) -> XarrayDataCube:
     value = context.get('value', None)
+
+    cube.save_to_file(path=Path(__file__).parent / "hypercube.nc", fmt='netcdf')
 
     return generate_composite(xarr=cube.get_array(), value=value)
