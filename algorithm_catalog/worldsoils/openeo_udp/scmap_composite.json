@@ -430,51 +430,23 @@
         }
       }
     },
-    "reducedimension3": {
-      "process_id": "reduce_dimension",
+    "apply2": {
+      "process_id": "apply",
       "arguments": {
         "data": {
           "from_node": "mergecubes2"
         },
-        "dimension": "bands",
-        "reducer": {
+        "process": {
           "process_graph": {
-            "arrayelement4": {
-              "process_id": "array_element",
+            "runudf1": {
+              "process_id": "run_udf",
               "arguments": {
                 "data": {
-                  "from_parameter": "data"
+                  "from_parameter": "x"
                 },
-                "index": 10
-              }
-            },
-            "arrayelement5": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 11
-              }
-            },
-            "subtract3": {
-              "process_id": "subtract",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement4"
-                },
-                "y": {
-                  "from_node": "arrayelement5"
-                }
-              }
-            },
-            "gt1": {
-              "process_id": "gt",
-              "arguments": {
-                "x": {
-                  "from_node": "subtract3"
-                },
-                "y": 0
+                "runtime": "Python",
+                "udf": "import numpy as np\nimport xarray as xr\nfrom typing import Dict\nfrom openeo.udf.xarraydatacube import XarrayDataCube\n\n\ndef apply_datacube(cube: XarrayDataCube, context: Dict) -> XarrayDataCube:\n    # Convert to xarray\n    xarr: xr.DataArray = cube.get_array()  \n    # dims: (t, bands, y, x)\n\n    # --- Extract bands ---\n    # reflectance = all S2 bands B02 .. B12\n    refl_bands = [b for b in xarr.bands.values if b.startswith(\"B\")]\n    refl = xarr.sel(bands=refl_bands)\n\n    # threshold image (2D or 3D)\n    th = xarr.sel(bands=\"S2_s2cr_pvir2_threshold_img\")\n\n    # pvir2 band\n    pvir2 = xarr.sel(bands=\"pvir2\")\n\n    # --- Ensure threshold image broadcasts properly ---\n    # If threshold is 2D (x,y) but pvir2 is 3D (t,x,y), broadcast:\n    if \"t\" not in th.dims:\n        th = th.expand_dims({\"t\": pvir2.t})  # broadcast temporally\n\n    # --- Build mask ---\n    # True where pixel should be masked\n    mask = pvir2 > th\n\n    # Broadcast mask to all reflectance bands\n    mask = mask.broadcast_like(refl)\n\n    # Apply mask (set bad pixels to NaN)\n    refl_masked = xr.where(mask, np.nan, refl)\n\n    # Return only masked reflectance bands\n    return XarrayDataCube(refl_masked)\n",
+                "version": "3.8"
               },
               "result": true
             }
@@ -482,22 +454,11 @@
         }
       }
     },
-    "mask2": {
-      "process_id": "mask",
-      "arguments": {
-        "data": {
-          "from_node": "mergecubes2"
-        },
-        "mask": {
-          "from_node": "reducedimension3"
-        }
-      }
-    },
-    "reducedimension4": {
+    "reducedimension3": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mask2"
+          "from_node": "apply2"
         },
         "dimension": "t",
         "reducer": {

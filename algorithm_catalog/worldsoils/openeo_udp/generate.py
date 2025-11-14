@@ -124,7 +124,13 @@ def composite(con: Connection,
             'value': value
         }
     )
+    udf = openeo.UDF.from_file(
+        Path(__file__).parent / "dynamic_masking_udf.py",
+        runtime="Python",
+        version="3.8"
+    )
 
+    s2_masked = s2_merged.apply(udf)
     src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
 
     # s2_cube = s2_cube.apply(process=udf_process)
