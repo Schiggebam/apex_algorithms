@@ -222,6 +222,146 @@
         }
       }
     },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask1"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement1": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 6
+              }
+            },
+            "arrayelement2": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 2
+              }
+            },
+            "subtract1": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": {
+                  "from_node": "arrayelement2"
+                }
+              }
+            },
+            "add1": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": {
+                  "from_node": "arrayelement2"
+                }
+              }
+            },
+            "divide1": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract1"
+                },
+                "y": {
+                  "from_node": "add1"
+                }
+              }
+            },
+            "arrayelement3": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 9
+              }
+            },
+            "subtract2": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": {
+                  "from_node": "arrayelement3"
+                }
+              }
+            },
+            "add2": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": {
+                  "from_node": "arrayelement3"
+                }
+              }
+            },
+            "divide2": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract2"
+                },
+                "y": {
+                  "from_node": "add2"
+                }
+              }
+            },
+            "add3": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "divide1"
+                },
+                "y": {
+                  "from_node": "divide2"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension1": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension1"
+        },
+        "label": "pvir2",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "mergecubes1": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mask1"
+        },
+        "cube2": {
+          "from_node": "adddimension1"
+        }
+      }
+    },
     "loadstac1": {
       "process_id": "load_stac",
       "arguments": {
@@ -246,7 +386,7 @@
         }
       }
     },
-    "reducedimension1": {
+    "reducedimension2": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -268,27 +408,27 @@
         }
       }
     },
-    "mergecubes1": {
+    "mergecubes2": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "mask1"
+          "from_node": "mergecubes1"
         },
         "cube2": {
-          "from_node": "reducedimension1"
+          "from_node": "reducedimension2"
         }
       }
     },
-    "reducedimension2": {
+    "reducedimension3": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mergecubes1"
+          "from_node": "mergecubes2"
         },
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement1": {
+            "arrayelement4": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -297,7 +437,7 @@
                 "label": "pvir2"
               }
             },
-            "arrayelement2": {
+            "arrayelement5": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -306,14 +446,14 @@
                 "label": "S2_s2cr_pvir2_threshold_img"
               }
             },
-            "subtract1": {
+            "subtract3": {
               "process_id": "subtract",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement4"
                 },
                 "y": {
-                  "from_node": "arrayelement2"
+                  "from_node": "arrayelement5"
                 }
               }
             },
@@ -321,7 +461,7 @@
               "process_id": "gt",
               "arguments": {
                 "x": {
-                  "from_node": "subtract1"
+                  "from_node": "subtract3"
                 },
                 "y": 0
               },
@@ -335,14 +475,14 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "mergecubes1"
+          "from_node": "mergecubes2"
         },
         "mask": {
-          "from_node": "reducedimension2"
+          "from_node": "reducedimension3"
         }
       }
     },
-    "reducedimension3": {
+    "reducedimension4": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {

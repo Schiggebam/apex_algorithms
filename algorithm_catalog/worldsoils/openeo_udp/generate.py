@@ -91,7 +91,8 @@ def composite(con: Connection,
     # cond_scl = ~((b_scl == SCL_LEGEND['vegetation']) | (b_scl == SCL_LEGEND['not_vegetated']) | (b_scl == SCL_LEGEND['water']))
     # s2_cube = s2_cube.mask(cond_scl)
 
-    s2_merged = s2_cube.merge_cubes(thresholds)
+    
+    s2_merged = s2_cube
 
     b_04 = s2_merged.band("B04")
     b_08 = s2_merged.band("B08")
@@ -101,14 +102,15 @@ def composite(con: Connection,
     nbr   = (b_08 - b_12) / (b_08 + b_12)
     pvir2 = ndvi + nbr
     
-    # pvir2_named = pvir2.add_dimension(name="bands", label="pvir2", type="bands")
-    # s2_merged = s2_merged.merge_cubes(pvir2_named)
+    pvir2_named = pvir2.add_dimension(name="bands", label="pvir2", type="bands")
+    
+    s2_merged = s2_merged.merge_cubes(pvir2_named)
+    s2_merged = s2_merged.merge_cubes(thresholds)
     
     
-    th = s2_merged.band("S2_s2cr_pvir2_threshold_img")
     # th = 0.2
 
-    mask = s2_merged.band("pvir2") - th > 0
+    mask = s2_merged.band("pvir2") - s2_merged.band("S2_s2cr_pvir2_threshold_img") > 0
     s2_masked = s2_merged.mask(mask)
 
     value = 3.1415
