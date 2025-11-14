@@ -131,7 +131,7 @@ def composite(con: Connection,
     )
 
     s2_masked = s2_merged.apply_dimension(dimension="t", process=udf)
-    src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
+    src = s2_masked.reduce_dimension(dimension="t", reducer="count")
 
     # s2_cube = s2_cube.apply(process=udf_process)
     # scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
@@ -199,7 +199,7 @@ def generate() -> dict:
 def test_run():
     con = auth()
     bbox = { "west": 11.15, "south": 48.15, "east": 11.2, "north": 48.2, "crs": "EPSG:4326"}
-    temporal_extent = ["2025-03-15", "2025-05-07"]
+    temporal_extent = ["2025-04-15", "2025-05-07"]
     composite = con.datacube_from_process(
         "scmap_composite", 
         namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap_composite.json",
@@ -211,7 +211,7 @@ def test_run():
 
 
 if __name__ == "__main__":
-    if False:
+    if True:
         test_run()
         exit()
     # save process to json

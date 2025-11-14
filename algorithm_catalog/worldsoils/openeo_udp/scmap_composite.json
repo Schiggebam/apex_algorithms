@@ -464,9 +464,12 @@
         "dimension": "t",
         "reducer": {
           "process_graph": {
-            "mean1": {
-              "process_id": "mean",
+            "count1": {
+              "process_id": "count",
               "arguments": {
+                "context": {
+                  "from_parameter": "context"
+                },
                 "data": {
                   "from_parameter": "data"
                 }
