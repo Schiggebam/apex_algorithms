@@ -2,8 +2,6 @@ import json
 import sys
 from pathlib import Path
 
-# 9anmsR9Uefg6aAk
-
 import openeo
 from openeo.api.process import Parameter
 from openeo.processes import array_create
@@ -102,10 +100,9 @@ def composite(con: Connection,
     ndvi  = (b_08 - b_04) / (b_08 + b_04)
     nbr   = (b_08 - b_12) / (b_08 + b_12)
     pvir2 = ndvi + nbr
-    pvir2_named = pvir2.add_dimension(name="bands", label="pvir2", type="bands")
     
-
-    s2_merged = s2_merged.merge_cubes(pvir2_named)
+    # pvir2_named = pvir2.add_dimension(name="bands", label="pvir2", type="bands")
+    # s2_merged = s2_merged.merge_cubes(pvir2_named)
     
     
     th = s2_merged.band("S2_s2cr_pvir2_threshold_img")
