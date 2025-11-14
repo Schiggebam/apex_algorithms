@@ -35,13 +35,14 @@ def generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:
     """
 
     b_bands = [b for b in xarr.bands.values if b.startswith("B") and len(b) == 3]
+    th_img = xarr.sel(bands='S2_s2cr_pvir2_threshold_img')
     xarr_reflectance = xarr.sel(bands=b_bands)
 
     th = .2
     idx = _pvir2(xarr_reflectance)
-    cond_idx = (idx > th).broadcast_like(xarr_reflectance)
+    cond_idx = (idx > th_img).broadcast_like(xarr_reflectance)
 
-    xarr_reflectance = xr.where(cond_idx, np.nan, xarr)
+    xarr_reflectance = xr.where(cond_idx, np.nan, xarr_reflectance)
 
     result_src      = xarr_reflectance.mean(dim="t", skipna=True)    # keepdims=False
     result_src_std  = xarr_reflectance.std(dim="t", skipna=True)
