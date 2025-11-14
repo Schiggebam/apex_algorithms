@@ -101,8 +101,8 @@ def composite(con: Connection,
     ndvi  = (b_08 - b_04) / (b_08 + b_04)
     nbr   = (b_08 - b_12) / (b_08 + b_12)
     pvir2 = ndvi + nbr
-
-    
+    pvir2_named = pvir2.add_dimension(name="bands", label="pvir2", type="bands")
+    s2_merged = s2_merged.merge_cubes(pvir2_named)
     
     # th = s2_merged.band("S2_s2cr_pvir2_threshold_img")
     th = 0.2
