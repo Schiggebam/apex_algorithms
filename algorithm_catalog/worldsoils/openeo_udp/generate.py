@@ -135,13 +135,14 @@ def test_run():
         "scmap_composite", 
         namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap_composite.json",
         temporal_extent=temporal_extent,
-        aoi=bbox,
+        spatial_extent=bbox,
+        max_cloud_cover=80
     )
     composite.execute_batch()
 
 
 if __name__ == "__main__":
-    if False:
+    if True:
         test_run()
         exit()
     # save process to json
