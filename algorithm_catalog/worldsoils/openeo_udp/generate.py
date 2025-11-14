@@ -92,17 +92,21 @@ def composite(con: Connection,
     # cond_scl = ~((b_scl == SCL_LEGEND['vegetation']) | (b_scl == SCL_LEGEND['not_vegetated']) | (b_scl == SCL_LEGEND['water']))
     # s2_cube = s2_cube.mask(cond_scl)
 
-    b_04 = s2_cube.band("B04")
-    b_08 = s2_cube.band("B08")
-    b_12 = s2_cube.band("B12")
+    s2_merged = s2_cube.merge_cubes(thresholds)
+
+    b_04 = s2_merged.band("B04")
+    b_08 = s2_merged.band("B08")
+    b_12 = s2_merged.band("B12")
 
     ndvi  = (b_08 - b_04) / (b_08 + b_04)
     nbr   = (b_08 - b_12) / (b_08 + b_12)
     pvir2 = ndvi + nbr
 
-    diff = s2_cube - thresholds     # gt not supported
-    mask = diff > 0
-    s2_cube = s2_cube.mask(mask)
+    
+    th = s2_merged.band("S2_s2cr_pvir2_threshold_img")
+    
+    mask = pvir2 - th > 0
+    s2_masked = s2_merged.mask(mask)
 
     value = 3.1415
 
@@ -115,7 +119,7 @@ def composite(con: Connection,
         }
     )
 
-    src = s2_cube.reduce_dimension(dimension="t", reducer="mean")
+    src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
 
     # s2_cube = s2_cube.apply(process=udf_process)
     # scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
