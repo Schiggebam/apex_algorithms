@@ -58,14 +58,16 @@ def composite(con: Connection,
     value = 3.1415
 
     udf_process = openeo.UDF.from_file(
-        "scmap_composite_udf.py",
+        Path(__file__).parent / "scmap_composite_udf.py",
         runtime="Python", 
+        version="3.8"
         context={
             'value': value
         }
     )
 
-    scm_composite = s2_cube.apply(process=udf_process)
+    # scm_composite = (s2_cube.apply(process=udf_process))
+    scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
 
     return scm_composite
 
