@@ -39,9 +39,9 @@ def generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:
     th_img = xarr.sel(bands='S2_s2cr_pvir2_threshold_img').squeeze(drop=True)
     xarr_reflectance = xarr.sel(bands=b_bands)
 
-    th = .2
+    th = .25
     idx = _pvir2(xarr_reflectance)
-    cond_idx = (idx > .2).broadcast_like(xarr_reflectance)
+    cond_idx = (idx > th).broadcast_like(xarr_reflectance)
 
     xarr_reflectance = xr.where(cond_idx, np.nan, xarr_reflectance)
 

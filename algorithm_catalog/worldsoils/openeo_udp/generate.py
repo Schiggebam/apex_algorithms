@@ -34,6 +34,25 @@ SCL_LEGEND = {
         "thin_cirrus": 10,
         "snow": 11}
 
+def scl_to_masks(scl_layer):
+        to_mask = openeo.processes.any(
+            array_create(
+                [
+                    scl_layer == SCL_LEGEND["cloud_shadows"],
+                    scl_layer == SCL_LEGEND["cloud_medium_probability"],
+                    scl_layer == SCL_LEGEND["cloud_high_probability"],
+                    scl_layer == SCL_LEGEND["thin_cirrus"],
+                    scl_layer == SCL_LEGEND["saturated_or_defective"],
+                    scl_layer == SCL_LEGEND["snow"],
+                    scl_layer == SCL_LEGEND["no_data"],
+                    scl_layer == SCL_LEGEND["dark_area_pixels"],
+                    scl_layer == SCL_LEGEND["unclassified"],
+                ]
+            ),
+        )
+
+        return to_mask
+
 def composite(con: Connection,
               temporal_extent: List[str]|Parameter,
               spatial_extent: dict|Parameter,
@@ -45,21 +64,44 @@ def composite(con: Connection,
     ### Input Data ###
     s2_cube = con.load_collection(
         collection_id="SENTINEL2_L2A",
-        bands=S2_BANDS + ['SCL', 'sunZenithAngles'],
+        bands=S2_BANDS,
         spatial_extent=spatial_extent,
-        temporal_extent=temporal_extent
+        temporal_extent=temporal_extent,
+        max_cloud_cover=max_cloud_cover,
     )
+
+    scl = con.load_collection(
+        collection_id="SENTINEL2_L2A",
+        temporal_extent=temporal_extent,
+        spatial_extent=spatial_extent,
+        bands=["SCL"],
+        max_cloud_cover=max_cloud_cover,
+    )
+
+    cloud_mask = scl.apply(process=scl_to_masks)
+
+    s2_cube = s2_cube.mask(cloud_mask)
 
     ### Threshold image ###
     stac_url_th_img = "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip.json"
     th_item = con.load_stac(stac_url_th_img, bands=["S2_s2cr_pvir2_threshold_img"], spatial_extent=spatial_extent)
     thresholds = th_item.resample_cube_spatial(s2_cube, method="bilinear")
-    s2_cube = s2_cube.merge_cubes(thresholds)
+    # s2_cube = s2_cube.merge_cubes(thresholds)
 
-    b_scl = s2_cube.band("SCL")
-    cond_scl = ~((b_scl == SCL_LEGEND['vegetation']) | (b_scl == SCL_LEGEND['not_vegetated']) | (b_scl == SCL_LEGEND['water']))
+    # b_scl = s2_cube.band("SCL")
+    # cond_scl = ~((b_scl == SCL_LEGEND['vegetation']) | (b_scl == SCL_LEGEND['not_vegetated']) | (b_scl == SCL_LEGEND['water']))
+    # s2_cube = s2_cube.mask(cond_scl)
 
-    s2_cube = s2_cube.mask(cond_scl)
+    b_04 = s2_cube.band("B04")
+    b_08 = s2_cube.band("B08")
+    b_12 = s2_cube.band("B12")
+
+    ndvi  = (b_08 - b_04) / (b_08 + b_04)
+    nbr   = (b_08 - b_12) / (b_08 + b_12)
+    pvir2 = ndvi + nbr
+
+    mask = s2_cube > thresholds
+    s2_cube.mask(mask)
 
     value = 3.1415
 
@@ -72,10 +114,12 @@ def composite(con: Connection,
         }
     )
 
-    # scm_composite = (s2_cube.apply(process=udf_process))
-    scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
+    src = s2_cube.reduce_dimension(dimension="t", reducer="mean")
 
-    return scm_composite
+    # s2_cube = s2_cube.apply(process=udf_process)
+    # scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
+
+    return src
 
 
 def auth(url: str="openeo.dataspace.copernicus.eu") -> Connection:

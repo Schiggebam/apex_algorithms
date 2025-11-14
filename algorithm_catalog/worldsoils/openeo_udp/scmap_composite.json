@@ -13,11 +13,27 @@
           "B08",
           "B8A",
           "B11",
-          "B12",
-          "SCL",
-          "sunZenithAngles"
+          "B12"
         ],
         "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte1": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": {
+                    "from_parameter": "max_cloud_cover"
+                  }
+                },
+                "result": true
+              }
+            }
+          }
+        },
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
@@ -26,113 +42,167 @@
         }
       }
     },
-    "loadstac1": {
-      "process_id": "load_stac",
+    "loadcollection2": {
+      "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "S2_s2cr_pvir2_threshold_img"
+          "SCL"
         ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte2": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": {
+                    "from_parameter": "max_cloud_cover"
+                  }
+                },
+                "result": true
+              }
+            }
+          }
+        },
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
-        "url": "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip.json"
-      }
-    },
-    "resamplecubespatial1": {
-      "process_id": "resample_cube_spatial",
-      "arguments": {
-        "data": {
-          "from_node": "loadstac1"
-        },
-        "method": "bilinear",
-        "target": {
-          "from_node": "loadcollection1"
+        "temporal_extent": {
+          "from_parameter": "temporal_extent"
         }
       }
     },
-    "mergecubes1": {
-      "process_id": "merge_cubes",
-      "arguments": {
-        "cube1": {
-          "from_node": "loadcollection1"
-        },
-        "cube2": {
-          "from_node": "resamplecubespatial1"
-        }
-      }
-    },
-    "reducedimension1": {
-      "process_id": "reduce_dimension",
+    "apply1": {
+      "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "mergecubes1"
+          "from_node": "loadcollection2"
         },
-        "dimension": "bands",
-        "reducer": {
+        "process": {
           "process_graph": {
-            "arrayelement1": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 10
-              }
-            },
             "eq1": {
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_parameter": "x"
                 },
-                "y": 4
+                "y": 3
               }
             },
             "eq2": {
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_parameter": "x"
                 },
-                "y": 5
-              }
-            },
-            "or1": {
-              "process_id": "or",
-              "arguments": {
-                "x": {
-                  "from_node": "eq1"
-                },
-                "y": {
-                  "from_node": "eq2"
-                }
+                "y": 8
               }
             },
             "eq3": {
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_parameter": "x"
                 },
-                "y": 6
+                "y": 9
               }
             },
-            "or2": {
-              "process_id": "or",
+            "eq4": {
+              "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "or1"
+                  "from_parameter": "x"
                 },
-                "y": {
-                  "from_node": "eq3"
-                }
+                "y": 10
               }
             },
-            "not1": {
-              "process_id": "not",
+            "eq5": {
+              "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "or2"
+                  "from_parameter": "x"
+                },
+                "y": 1
+              }
+            },
+            "eq6": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 11
+              }
+            },
+            "eq7": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 0
+              }
+            },
+            "eq8": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 2
+              }
+            },
+            "eq9": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 7
+              }
+            },
+            "arraycreate1": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "eq1"
+                  },
+                  {
+                    "from_node": "eq2"
+                  },
+                  {
+                    "from_node": "eq3"
+                  },
+                  {
+                    "from_node": "eq4"
+                  },
+                  {
+                    "from_node": "eq5"
+                  },
+                  {
+                    "from_node": "eq6"
+                  },
+                  {
+                    "from_node": "eq7"
+                  },
+                  {
+                    "from_node": "eq8"
+                  },
+                  {
+                    "from_node": "eq9"
+                  }
+                ]
+              }
+            },
+            "any1": {
+              "process_id": "any",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate1"
                 }
               },
               "result": true
@@ -145,14 +215,14 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "mergecubes1"
+          "from_node": "loadcollection1"
         },
         "mask": {
-          "from_node": "reducedimension1"
+          "from_node": "apply1"
         }
       }
     },
-    "reducedimension2": {
+    "reducedimension1": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -161,18 +231,12 @@
         "dimension": "t",
         "reducer": {
           "process_graph": {
-            "runudf1": {
-              "process_id": "run_udf",
+            "mean1": {
+              "process_id": "mean",
               "arguments": {
-                "context": {
-                  "value": 3.1415
-                },
                 "data": {
                   "from_parameter": "data"
-                },
-                "runtime": "Python",
-                "udf": "import xarray as xr\nimport numpy as np\nfrom openeo.udf.xarraydatacube import XarrayDataCube\n\nfrom typing import Dict\nfrom pathlib import Path\n\ndef _nmad(xarr: xr.DataArray) -> xr.DataArray:\n    b02 = xarr.sel(bands='B02')\n    median = b02.median(dim=TIME, skipna=True)               \n    dev = np.abs(b02 - median)                          \n    mad = dev.median(dim=TIME, skipna=True)                  \n    nmad = 1.4826 * mad\n    upper = median + nmad_sigma * nmad\n\n    cond = (b02 > upper) & (b02 > (median + 80.0))\n    cond = cond.broadcast_like(xr_data)           \n\n    return xr.where(cond, np.nan, xarr)\n\n\ndef _pvir2(xarr: xr.DataArray) -> xr.DataArray:\n    b04 = xarr.sel(bands='B02')\n    b08 = xarr.sel(bands='B08')\n    b12 = xarr.sel(bands='B12')\n\n    return ((b08 - b04) / (b08 + b04)) + ((b08 - b12) / (b08 + b12))\n\n\ndef generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:\n    \"\"\"\n    Lorem Ipsum\n    :param xarr: abc\n    :param value: abc\n    :return: Datacube \n    \"\"\"\n\n    b_bands = [b for b in xarr.bands.values if b.startswith(\"B\") and len(b) == 3]\n    th_img = xarr.sel(bands='S2_s2cr_pvir2_threshold_img').squeeze(drop=True)\n    xarr_reflectance = xarr.sel(bands=b_bands)\n\n    th = .2\n    idx = _pvir2(xarr_reflectance)\n    cond_idx = (idx > .2).broadcast_like(xarr_reflectance)\n\n    xarr_reflectance = xr.where(cond_idx, np.nan, xarr_reflectance)\n\n    result_src      = xarr_reflectance.mean(dim=\"t\", skipna=True)    # keepdims=False\n    result_src_std  = xarr_reflectance.std(dim=\"t\", skipna=True)\n\n    result_src = result_src.assign_coords({\n        \"bands\": [f\"SRC_{b}\" for b in result_src[\"bands\"].values]\n    })\n    result_src_std = result_src_std.assign_coords({\n        \"bands\": [f\"SRC_STD_{b}\" for b in result_src_std[\"bands\"].values]\n    })\n\n    result = xr.concat([result_src, result_src_std], dim=\"bands\")\n    return XarrayDataCube(result)\n\ndef apply_datacube(cube: XarrayDataCube, context: Dict) -> XarrayDataCube:\n    value = context.get('value', None)\n\n    fn_out = \"my_hypercube.nc\"\n    # fn_out = Path(__file__).parent / \"my_hypercube.nc\"\n    cube.save_to_file(path=fn_out, fmt='netcdf')\n\n    return generate_composite(xarr=cube.get_array(), value=value)",
-                "version": "3.8"
+                }
               },
               "result": true
             }
