@@ -60,7 +60,7 @@ def composite(con: Connection,
     udf_process = openeo.UDF.from_file(
         Path(__file__).parent / "scmap_composite_udf.py",
         runtime="Python", 
-        version="3.8"
+        version="3.8",
         context={
             'value': value
         }
@@ -144,7 +144,7 @@ def test_run():
 
 
 if __name__ == "__main__":
-    if True:
+    if False:
         test_run()
         exit()
     # save process to json

@@ -117,13 +117,14 @@
         }
       }
     },
-    "apply1": {
-      "process_id": "apply",
+    "reducedimension2": {
+      "process_id": "reduce_dimension",
       "arguments": {
         "data": {
           "from_node": "mask1"
         },
-        "process": {
+        "dimension": "t",
+        "reducer": {
           "process_graph": {
             "runudf1": {
               "process_id": "run_udf",
@@ -132,10 +133,11 @@
                   "value": 3.1415
                 },
                 "data": {
-                  "from_parameter": "x"
+                  "from_parameter": "data"
                 },
                 "runtime": "Python",
-                "udf": "import xarray as xr\nimport numpy as np\nfrom openeo.udf.xarraydatacube import XarrayDataCube\n\n\ndef generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:\n    \"\"\"\n    Lorem Ipsum\n    :param xarr: abc\n    :param value: abc\n    :return: Datacube \n    \"\"\"\n    result = xarr.copy()                             # same as input\n    result.values = np.zeros(xarr.values)            # exchange data\n    return XarrayDataCube(result)\n\ndef apply_datacube(cube: XarrayDataCube, context) -> XarrayDataCube:\n    value = context.get('value', None)\n\n    return generate_composite(xarr=cube.get_array(), value=value)"
+                "udf": "import xarray as xr\nimport numpy as np\nfrom openeo.udf.xarraydatacube import XarrayDataCube\n\nfrom typing import Dict\n\ndef generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:\n    \"\"\"\n    Lorem Ipsum\n    :param xarr: abc\n    :param value: abc\n    :return: Datacube \n    \"\"\"\n    print(xarr)\n\n    result = xarr.copy()                             # same as input\n    result.values = np.zeros(xarr.values)            # exchange data\n    return XarrayDataCube(result)\n\ndef apply_datacube(cube: XarrayDataCube, context: Dict) -> XarrayDataCube:\n    value = context.get('value', None)\n\n    return generate_composite(xarr=cube.get_array(), value=value)",
+                "version": "3.8"
               },
               "result": true
             }
