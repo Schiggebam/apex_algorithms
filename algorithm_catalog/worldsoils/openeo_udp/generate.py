@@ -85,6 +85,7 @@ def composite(con: Connection,
     th_item = con.load_stac(stac_url_th_img, bands=["S2_s2cr_pvir2_threshold_img"], spatial_extent=spatial_extent)
     thresholds = th_item.resample_cube_spatial(s2_cube, method="bilinear").reduce_dimension(dimension="bands", reducer="first")
 
+
     # s2_cube = s2_cube.merge_cubes(thresholds)
 
     # b_scl = s2_cube.band("SCL")
@@ -111,8 +112,8 @@ def composite(con: Connection,
     
     # th = 0.2
 
-    mask = s2_merged.band("pvir2") - s2_merged.band("th_img") > 0          # S2_s2cr_pvir2_threshold_img
-    s2_masked = s2_merged.mask(mask)
+    mask = s2_merged.band("pvir2") > s2_merged.band("th_img")          # S2_s2cr_pvir2_threshold_img
+    # s2_masked = s2_merged.mask(mask)
 
     value = 3.1415
 
@@ -131,7 +132,7 @@ def composite(con: Connection,
     )
 
     s2_masked = s2_merged.apply_dimension(dimension="t", process=udf)
-    src = s2_masked.reduce_dimension(dimension="t", reducer="count")
+    src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
 
     # s2_cube = s2_cube.apply(process=udf_process)
     # scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
@@ -211,7 +212,7 @@ def test_run():
 
 
 if __name__ == "__main__":
-    if True:
+    if False:
         test_run()
         exit()
     # save process to json
