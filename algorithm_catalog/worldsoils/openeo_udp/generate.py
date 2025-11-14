@@ -100,7 +100,8 @@ def composite(con: Connection,
     nbr   = (b_08 - b_12) / (b_08 + b_12)
     pvir2 = ndvi + nbr
 
-    mask = s2_cube > thresholds
+    diff = s2_cube - thresholds     # gt not supported
+    mask = diff > 0
     s2_cube = s2_cube.mask(mask)
 
     value = 3.1415
@@ -194,7 +195,7 @@ def test_run():
 
 
 if __name__ == "__main__":
-    if False:
+    if True:
         test_run()
         exit()
     # save process to json
