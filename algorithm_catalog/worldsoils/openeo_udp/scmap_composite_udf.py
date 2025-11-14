@@ -3,6 +3,7 @@ import numpy as np
 from openeo.udf.xarraydatacube import XarrayDataCube
 
 from typing import Dict
+from pathlib import Path
 
 def _nmad(xarr: xr.DataArray) -> xr.DataArray:
     b02 = xarr.sel(bands='B02')
@@ -35,7 +36,7 @@ def generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:
     """
 
     b_bands = [b for b in xarr.bands.values if b.startswith("B") and len(b) == 3]
-    th_img = xarr.sel(bands='S2_s2cr_pvir2_threshold_img')
+    th_img = xarr.sel(bands='S2_s2cr_pvir2_threshold_img').squeeze(drop=True)
     xarr_reflectance = xarr.sel(bands=b_bands)
 
     th = .2
@@ -60,6 +61,8 @@ def generate_composite(xarr: xr.DataArray, value) -> XarrayDataCube:
 def apply_datacube(cube: XarrayDataCube, context: Dict) -> XarrayDataCube:
     value = context.get('value', None)
 
-    cube.save_to_file(path=Path(__file__).parent / "hypercube.nc", fmt='netcdf')
+    fn_out = "my_hypercube.nc"
+    # fn_out = Path(__file__).parent / "my_hypercube.nc"
+    cube.save_to_file(path=fn_out, fmt='netcdf')
 
     return generate_composite(xarr=cube.get_array(), value=value)
