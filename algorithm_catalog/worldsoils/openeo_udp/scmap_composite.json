@@ -430,22 +430,23 @@
         }
       }
     },
-    "apply2": {
-      "process_id": "apply",
+    "applydimension1": {
+      "process_id": "apply_dimension",
       "arguments": {
         "data": {
           "from_node": "mergecubes2"
         },
+        "dimension": "t",
         "process": {
           "process_graph": {
             "runudf1": {
               "process_id": "run_udf",
               "arguments": {
                 "data": {
-                  "from_parameter": "x"
+                  "from_parameter": "data"
                 },
                 "runtime": "Python",
-                "udf": "import numpy as np\nimport xarray as xr\nfrom typing import Dict\nfrom openeo.udf.xarraydatacube import XarrayDataCube\n\n\ndef apply_datacube(cube: XarrayDataCube, context: dict) -> XarrayDataCube:\n    xarr: xr.DataArray = cube.get_array()\n    # dims: typically ('t',) for apply(), or scalar for reduce_dimension\n\n    # reflectance bands (filter by names)\n    refl_bands = [b for b in xarr.coords[\"bands\"].values if b.startswith(\"B\")]\n    refl = xarr.sel(bands=refl_bands)\n\n    # pvir2 and threshold image\n    pvir2 = xarr.sel(bands=\"pvir2\")\n    th    = xarr.sel(bands=\"th_img\")\n\n    # mask per pixel, per timestep\n    mask = pvir2 > th\n\n    # apply mask\n    refl_masked = xr.where(mask, np.nan, refl)\n\n    return XarrayDataCube(refl_masked)\n",
+                "udf": "import numpy as np\nimport xarray as xr\nfrom typing import Dict\nfrom openeo.udf.xarraydatacube import XarrayDataCube\n\n\n# def apply_datacube(cube: XarrayDataCube, context: dict) -> XarrayDataCube:\n#     xarr: xr.DataArray = cube.get_array()\n#     # dims: typically ('t',) for apply(), or scalar for reduce_dimension\n# \n#     # reflectance bands (filter by names)\n#     refl_bands = [b for b in xarr.coords[\"bands\"].values if b.startswith(\"B\")]\n#     refl = xarr.sel(bands=refl_bands)\n# \n#     # pvir2 and threshold image\n#     pvir2 = xarr.sel(bands=\"pvir2\")\n#     th    = xarr.sel(bands=\"th_img\")\n# \n#     # mask per pixel, per timestep\n#     mask = pvir2 > th\n# \n#     # apply mask\n#     refl_masked = xr.where(mask, np.nan, refl)\n# \n#     return XarrayDataCube(refl_masked)\n\n\ndef apply_datacube(cube: XarrayDataCube, context: dict) -> XarrayDataCube:\n    \"\"\"\n    cube dims: (bands, t, y, x)\n    \"\"\"\n    xarr: xr.DataArray = cube.get_array()\n\n    # Extract required bands\n    pvir2  = xarr.sel(bands=\"pvir2\")\n    th_img = xarr.sel(bands=\"th_img\")\n\n    # Mask condition\n    mask = pvir2 > th_img\n\n    # Apply mask only to reflectance bands\n    refl_bands = [b for b in xarr.bands.values if b.startswith(\"B\")]\n\n    result = xarr.copy()\n\n    for b in refl_bands:\n        result.loc[dict(bands=b)] = xr.where(\n            mask, \n            result.sel(bands=b), \n            float(np.nan)\n        )\n\n    # Do not mask pvir2 or threshold band \u2192 keep unchanged\n    return XarrayDataCube(result)",
                 "version": "3.8"
               },
               "result": true
@@ -458,7 +459,7 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "apply2"
+          "from_node": "applydimension1"
         },
         "dimension": "t",
         "reducer": {

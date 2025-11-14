@@ -130,7 +130,7 @@ def composite(con: Connection,
         version="3.8"
     )
 
-    s2_masked = s2_merged.apply(udf)
+    s2_masked = s2_merged.apply_dimension(dimension="t", process=udf)
     src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
 
     # s2_cube = s2_cube.apply(process=udf_process)
