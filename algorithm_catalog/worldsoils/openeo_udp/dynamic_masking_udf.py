@@ -15,7 +15,7 @@ def apply_datacube(cube: XarrayDataCube, context: Dict) -> XarrayDataCube:
     refl = xarr.sel(bands=refl_bands)
 
     # threshold image (2D or 3D)
-    th = xarr.sel(bands="S2_s2cr_pvir2_threshold_img")
+    th = xarr.sel(bands="th_img")
 
     # pvir2 band
     pvir2 = xarr.sel(bands="pvir2")
