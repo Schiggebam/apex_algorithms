@@ -443,7 +443,7 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "label": "S2_s2cr_pvir2_threshold_img"
+                "label": "th_img"
               }
             },
             "subtract3": {

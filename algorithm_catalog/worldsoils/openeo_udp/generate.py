@@ -103,14 +103,15 @@ def composite(con: Connection,
     pvir2 = ndvi + nbr
     
     pvir2_named = pvir2.add_dimension(name="bands", label="pvir2", type="bands")
-    
+    th_named = thresholds.add_dimension(name="bands", label="th_img", type="bands")
+
     s2_merged = s2_merged.merge_cubes(pvir2_named)
     s2_merged = s2_merged.merge_cubes(thresholds)
     
     
     # th = 0.2
 
-    mask = s2_merged.band("pvir2") - s2_merged.band("S2_s2cr_pvir2_threshold_img") > 0
+    mask = s2_merged.band("pvir2") - s2_merged.band("th_img") > 0          # S2_s2cr_pvir2_threshold_img
     s2_masked = s2_merged.mask(mask)
 
     value = 3.1415
@@ -204,7 +205,7 @@ def test_run():
 
 
 if __name__ == "__main__":
-    if False:
+    if True:
         test_run()
         exit()
     # save process to json
