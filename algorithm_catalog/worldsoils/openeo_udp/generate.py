@@ -110,30 +110,32 @@ def composite(con: Connection,
     s2_merged = s2_merged.merge_cubes(th_named)
     
     
-    # th = 0.2
+    th = 0.2
+    # th = s2_merged.band("th_img") 
 
-    mask = s2_merged.band("pvir2") > s2_merged.band("th_img")          # S2_s2cr_pvir2_threshold_img
-    # s2_masked = s2_merged.mask(mask)
+    mask = s2_merged.band("pvir2") > s2_merged.band("th_img") 
+    s2_masked = s2_merged.mask(mask)
 
-    value = 3.1415
+    # value = 3.1415
+# 
+    # udf_process = openeo.UDF.from_file(
+    #     Path(__file__).parent / "scmap_composite_udf.py",
+    #     runtime="Python", 
+    #     version="3.8",
+    #     context={
+    #         'value': value
+    #     }
+    # )
+    # udf = openeo.UDF.from_file(
+    #     Path(__file__).parent / "dynamic_masking_udf.py",
+    #     runtime="Python",
+    #     version="3.8"
+    # )
 
-    udf_process = openeo.UDF.from_file(
-        Path(__file__).parent / "scmap_composite_udf.py",
-        runtime="Python", 
-        version="3.8",
-        context={
-            'value': value
-        }
-    )
-    udf = openeo.UDF.from_file(
-        Path(__file__).parent / "dynamic_masking_udf.py",
-        runtime="Python",
-        version="3.8"
-    )
-
-    s2_masked = s2_merged.reduce_dimension(dimension="t", reducer=udf)
-    src = s2_masked
-    #src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
+    # pvir2 = s2_merged.band("pvir2")
+    # s2_masked = s2_merged.apply_dimension(dimension="bands", process=mask_x)
+    
+    src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
 
     # s2_cube = s2_cube.apply(process=udf_process)
     # scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
