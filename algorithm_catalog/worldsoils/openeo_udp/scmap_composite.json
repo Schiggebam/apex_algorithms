@@ -448,24 +448,13 @@
                 "index": 10
               }
             },
-            "arrayelement5": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 11
-              }
-            },
             "gt1": {
               "process_id": "gt",
               "arguments": {
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": {
-                  "from_node": "arrayelement5"
-                }
+                "y": 0.2
               },
               "result": true
             }

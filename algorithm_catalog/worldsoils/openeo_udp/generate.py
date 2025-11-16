@@ -113,7 +113,7 @@ def composite(con: Connection,
     th = 0.2
     # th = s2_merged.band("th_img") 
 
-    mask = s2_merged.band("pvir2") > s2_merged.band("th_img") 
+    mask = s2_merged.band("pvir2") > th
     s2_masked = s2_merged.mask(mask)
 
     # value = 3.1415
@@ -215,7 +215,7 @@ def test_run():
 
 
 if __name__ == "__main__":
-    if False:
+    if True:
         test_run()
         exit()
     # save process to json
