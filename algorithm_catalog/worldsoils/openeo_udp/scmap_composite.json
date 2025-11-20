@@ -371,7 +371,7 @@
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
-        "url": "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip.json"
+        "url": "https://raw.githubusercontent.com/Schiggebam/dlr_scmap_resources/refs/heads/main/scmap-pvir2%2Bnbr-sen2cor-thresholds-eu-v1.json"
       }
     },
     "resamplecubespatial1": {
@@ -448,13 +448,24 @@
                 "index": 10
               }
             },
+            "arrayelement5": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 11
+              }
+            },
             "gt1": {
               "process_id": "gt",
               "arguments": {
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": 0.2
+                "y": {
+                  "from_node": "arrayelement5"
+                }
               },
               "result": true
             }

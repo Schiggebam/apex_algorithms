@@ -81,7 +81,8 @@ def composite(con: Connection,
     s2_cube = s2_cube.mask(cloud_mask)
 
     ### Threshold image ###
-    stac_url_th_img = "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip.json"
+    stac_url_th_img = "https://raw.githubusercontent.com/Schiggebam/dlr_scmap_resources/refs/heads/main/scmap-pvir2%2Bnbr-sen2cor-thresholds-eu-v1.json"
+    # stac_url_th_img = "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip.json"
     th_item = con.load_stac(stac_url_th_img, bands=["S2_s2cr_pvir2_threshold_img"], spatial_extent=spatial_extent)
     thresholds = th_item.resample_cube_spatial(s2_cube, method="bilinear").reduce_dimension(dimension="bands", reducer="first")
 
@@ -110,8 +111,8 @@ def composite(con: Connection,
     s2_merged = s2_merged.merge_cubes(th_named)
     
     
-    th = 0.2
-    # th = s2_merged.band("th_img") 
+    # th = 0.2
+    th = s2_merged.band("th_img") 
 
     mask = s2_merged.band("pvir2") > th
     s2_masked = s2_merged.mask(mask)
@@ -215,7 +216,7 @@ def test_run():
 
 
 if __name__ == "__main__":
-    if True:
+    if False:
         test_run()
         exit()
     # save process to json
