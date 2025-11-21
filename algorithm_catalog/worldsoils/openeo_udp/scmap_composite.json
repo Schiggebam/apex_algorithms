@@ -371,7 +371,7 @@
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
-        "url": "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip.json"
+        "url": "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip_timerange.json"
       }
     },
     "resamplecubespatial1": {
