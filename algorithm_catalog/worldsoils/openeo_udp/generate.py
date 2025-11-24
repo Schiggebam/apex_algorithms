@@ -82,7 +82,8 @@ def composite(con: Connection,
 
     ### Threshold image ###
     # stac_url_th_img = "https://raw.githubusercontent.com/Schiggebam/dlr_scmap_resources/refs/heads/main/scmap-pvir2%2Bnbr-sen2cor-thresholds-eu-v1.json"
-    stac_url_th_img = "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip_timerange.json"
+    # stac_url_th_img = "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip_timerange.json"
+    stac_url_th_img = "https://raw.githubusercontent.com/EmileSonneveld/dlr_scmap_resources/refs/heads/main/th_S2_s2cr_buffered_stac_yflip.json"
     th_item = con.load_stac(stac_url_th_img, bands=["S2_s2cr_pvir2_threshold_img"], spatial_extent=spatial_extent)
     thresholds = th_item.resample_cube_spatial(s2_cube, method="bilinear").reduce_dimension(dimension="bands", reducer="first")
 
@@ -106,6 +107,7 @@ def composite(con: Connection,
     
     pvir2_named = pvir2.add_dimension(name="bands", label="pvir2", type="bands")
     th_named = thresholds.add_dimension(name="bands", label="th_img", type="bands")
+    th_named = th_named.reduce_dimension(dimension="t", reducer="mean")
 
     s2_merged = s2_merged.merge_cubes(pvir2_named)
     s2_merged = s2_merged.merge_cubes(th_named)
@@ -205,14 +207,23 @@ def test_run():
     con = auth()
     bbox = { "west": 11.15, "south": 48.15, "east": 11.2, "north": 48.2, "crs": "EPSG:4326"}
     temporal_extent = ["2025-04-15", "2025-05-07"]
-    composite = con.datacube_from_process(
-        "scmap_composite", 
-        namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap_composite.json",
+    # composite = con.datacube_from_process(
+    #     "scmap_composite",
+    #     namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap_composite.json",
+    #     temporal_extent=temporal_extent,
+    #     spatial_extent=bbox,
+    #     max_cloud_cover=80
+    # )
+    # composite.execute_batch()
+    scmap_composite = composite(
+        con=con,
         temporal_extent=temporal_extent,
         spatial_extent=bbox,
-        max_cloud_cover=80
+        max_cloud_cover=80,
     )
-    composite.execute_batch()
+    job = scmap_composite.create_job(title="scmap_composite")
+    job.start_and_wait()
+    job.get_results().download_files()
 
 
 if __name__ == "__main__":
