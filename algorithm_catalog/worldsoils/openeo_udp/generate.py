@@ -207,14 +207,23 @@ def test_run():
     con = auth()
     bbox = { "west": 11.15, "south": 48.15, "east": 11.2, "north": 48.2, "crs": "EPSG:4326"}
     temporal_extent = ["2025-04-15", "2025-05-07"]
-    composite = con.datacube_from_process(
-        "scmap_composite", 
-        namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap_composite.json",
+    # composite = con.datacube_from_process(
+    #     "scmap_composite",
+    #     namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap_composite.json",
+    #     temporal_extent=temporal_extent,
+    #     spatial_extent=bbox,
+    #     max_cloud_cover=80
+    # )
+    # composite.execute_batch()
+    scmap_composite = composite(
+        con=con,
         temporal_extent=temporal_extent,
         spatial_extent=bbox,
-        max_cloud_cover=80
+        max_cloud_cover=80,
     )
-    composite.execute_batch()
+    job = scmap_composite.create_job(title="scmap_composite")
+    job.start_and_wait()
+    job.get_results().download_files()
 
 
 if __name__ == "__main__":
