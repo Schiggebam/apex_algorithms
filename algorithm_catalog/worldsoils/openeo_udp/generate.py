@@ -82,7 +82,8 @@ def composite(con: Connection,
 
     ### Threshold image ###
     # stac_url_th_img = "https://raw.githubusercontent.com/Schiggebam/dlr_scmap_resources/refs/heads/main/scmap-pvir2%2Bnbr-sen2cor-thresholds-eu-v1.json"
-    stac_url_th_img = "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip_timerange.json"
+    # stac_url_th_img = "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip_timerange.json"
+    stac_url_th_img = "https://raw.githubusercontent.com/EmileSonneveld/dlr_scmap_resources/refs/heads/main/th_S2_s2cr_buffered_stac_yflip.json"
     th_item = con.load_stac(stac_url_th_img, bands=["S2_s2cr_pvir2_threshold_img"], spatial_extent=spatial_extent)
     thresholds = th_item.resample_cube_spatial(s2_cube, method="bilinear").reduce_dimension(dimension="bands", reducer="first")
 
@@ -106,6 +107,7 @@ def composite(con: Connection,
     
     pvir2_named = pvir2.add_dimension(name="bands", label="pvir2", type="bands")
     th_named = thresholds.add_dimension(name="bands", label="th_img", type="bands")
+    th_named = th_named.reduce_dimension(dimension="t", reducer="mean")
 
     s2_merged = s2_merged.merge_cubes(pvir2_named)
     s2_merged = s2_merged.merge_cubes(th_named)
