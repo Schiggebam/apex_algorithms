@@ -371,7 +371,7 @@
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
-        "url": "https://github.com/Schiggebam/dlr_scmap_resources/raw/main/th_S2_s2cr_buffered_stac_yflip_timerange.json"
+        "url": "https://raw.githubusercontent.com/EmileSonneveld/dlr_scmap_resources/refs/heads/main/th_S2_s2cr_buffered_stac_yflip.json"
       }
     },
     "resamplecubespatial1": {
@@ -419,6 +419,28 @@
         "type": "bands"
       }
     },
+    "reducedimension3": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "adddimension2"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "mean1": {
+              "process_id": "mean",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
     "mergecubes2": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -426,11 +448,11 @@
           "from_node": "mergecubes1"
         },
         "cube2": {
-          "from_node": "adddimension2"
+          "from_node": "reducedimension3"
         }
       }
     },
-    "reducedimension3": {
+    "reducedimension4": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -480,11 +502,11 @@
           "from_node": "mergecubes2"
         },
         "mask": {
-          "from_node": "reducedimension3"
+          "from_node": "reducedimension4"
         }
       }
     },
-    "reducedimension4": {
+    "reducedimension5": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -493,7 +515,7 @@
         "dimension": "t",
         "reducer": {
           "process_graph": {
-            "mean1": {
+            "mean2": {
               "process_id": "mean",
               "arguments": {
                 "data": {
