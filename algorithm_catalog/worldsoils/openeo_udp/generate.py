@@ -205,7 +205,7 @@ def generate() -> dict:
 
 def test_run():
     con = auth()
-    bbox = { "west": 11.15, "south": 48.15, "east": 11.2, "north": 48.2, "crs": "EPSG:4326"}
+    bbox = { "west": 11, "south": 48, "east": 11.2, "north": 48.2, "crs": "EPSG:4326"}
     temporal_extent = ["2025-04-15", "2025-05-07"]
     # composite = con.datacube_from_process(
     #     "scmap_composite",
