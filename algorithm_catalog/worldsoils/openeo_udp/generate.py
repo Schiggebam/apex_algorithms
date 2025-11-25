@@ -152,11 +152,12 @@ def composite(con: Connection,
     s2_masked = s2_masked.mask(cond_wc)
 
     src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
+    src_std = s2_masked.reduce_dimension(dimension="t", reducer="sd")
 
     # s2_cube = s2_cube.apply(process=udf_process)
     # scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
 
-    return src
+    return src, src_std
 
 
 def auth(url: str="openeo.dataspace.copernicus.eu") -> Connection:
@@ -236,7 +237,7 @@ def test_run():
     )
     job = scmap_composite.create_job(title="scmap_composite")
     job.start_and_wait()
-    job.get_results().download_files()
+    job.get_results().download_files("./out")
 
 
 if __name__ == "__main__":

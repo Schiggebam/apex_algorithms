@@ -655,6 +655,28 @@
             }
           }
         }
+      }
+    },
+    "reducedimension7": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask3"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "sd1": {
+              "process_id": "sd",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
       },
       "result": true
     }
