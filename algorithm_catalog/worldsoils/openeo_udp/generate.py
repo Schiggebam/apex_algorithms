@@ -94,7 +94,7 @@ def composite(con: Connection,
         spatial_extent=spatial_extent,
         temporal_extent=temporal_extent,
         max_cloud_cover=max_cloud_cover,
-    )
+    ).resample_spatial(resolution=20)
 
     scl = con.load_collection(
         collection_id="SENTINEL2_L2A",
@@ -102,7 +102,7 @@ def composite(con: Connection,
         spatial_extent=spatial_extent,
         bands=['SCL', 'sunZenithAngles'],
         max_cloud_cover=max_cloud_cover,
-    )
+    ).resample_cube_spatial(s2_cube, method="near")
 
     sza = con.load_collection(
         collection_id="SENTINEL2_L2A",
@@ -110,7 +110,7 @@ def composite(con: Connection,
         spatial_extent=spatial_extent,
         bands=['SCL', 'sunZenithAngles'],
         max_cloud_cover=max_cloud_cover,
-    ).resample_cube_spatial(scl.band('SCL'), method="near")
+    ).resample_cube_spatial(s2_cube, method="near")
 
     worldcover = con.load_collection(
         "ESA_WORLDCOVER_10M_2021_V2",
@@ -120,7 +120,7 @@ def composite(con: Connection,
     )
     worldcover = worldcover.reduce_dimension(dimension="t", reducer="first")
     
-    s2_cube = s2_cube.resample_cube_spatial(scl.band('SCL'), method="near")
+    # s2_cube = s2_cube.resample_cube_spatial(scl.band('SCL'), method="near")
 
     cond_scl = scl.band('SCL').apply(process=scl_to_masks)
     cond_sza = sza > max_sun_zenith_angle

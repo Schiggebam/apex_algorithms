@@ -42,6 +42,18 @@
         }
       }
     },
+    "resamplespatial1": {
+      "process_id": "resample_spatial",
+      "arguments": {
+        "align": "upper-left",
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "method": "near",
+        "projection": null,
+        "resolution": 20
+      }
+    },
     "loadcollection2": {
       "process_id": "load_collection",
       "arguments": {
@@ -76,11 +88,23 @@
         }
       }
     },
+    "resamplecubespatial1": {
+      "process_id": "resample_cube_spatial",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection2"
+        },
+        "method": "near",
+        "target": {
+          "from_node": "resamplespatial1"
+        }
+      }
+    },
     "reducedimension1": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "loadcollection2"
+          "from_node": "resamplecubespatial1"
         },
         "dimension": "bands",
         "reducer": {
@@ -99,46 +123,11 @@
         }
       }
     },
-    "resamplecubespatial1": {
-      "process_id": "resample_cube_spatial",
-      "arguments": {
-        "data": {
-          "from_node": "loadcollection1"
-        },
-        "method": "near",
-        "target": {
-          "from_node": "reducedimension1"
-        }
-      }
-    },
-    "reducedimension2": {
-      "process_id": "reduce_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "loadcollection2"
-        },
-        "dimension": "bands",
-        "reducer": {
-          "process_graph": {
-            "arrayelement2": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 0
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
     "apply1": {
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "reducedimension2"
+          "from_node": "reducedimension1"
         },
         "process": {
           "process_graph": {
@@ -274,7 +263,7 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial1"
+          "from_node": "resamplespatial1"
         },
         "mask": {
           "from_node": "apply1"
@@ -315,29 +304,6 @@
         }
       }
     },
-    "reducedimension3": {
-      "process_id": "reduce_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "loadcollection2"
-        },
-        "dimension": "bands",
-        "reducer": {
-          "process_graph": {
-            "arrayelement3": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 0
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
     "resamplecubespatial2": {
       "process_id": "resample_cube_spatial",
       "arguments": {
@@ -346,7 +312,7 @@
         },
         "method": "near",
         "target": {
-          "from_node": "reducedimension3"
+          "from_node": "resamplespatial1"
         }
       }
     },
@@ -383,7 +349,7 @@
         }
       }
     },
-    "reducedimension4": {
+    "reducedimension2": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -392,7 +358,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement4": {
+            "arrayelement2": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -401,7 +367,7 @@
                 "index": 6
               }
             },
-            "arrayelement5": {
+            "arrayelement3": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -414,10 +380,10 @@
               "process_id": "subtract",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement4"
+                  "from_node": "arrayelement2"
                 },
                 "y": {
-                  "from_node": "arrayelement5"
+                  "from_node": "arrayelement3"
                 }
               }
             },
@@ -425,10 +391,10 @@
               "process_id": "add",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement4"
+                  "from_node": "arrayelement2"
                 },
                 "y": {
-                  "from_node": "arrayelement5"
+                  "from_node": "arrayelement3"
                 }
               }
             },
@@ -443,7 +409,7 @@
                 }
               }
             },
-            "arrayelement6": {
+            "arrayelement4": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -456,10 +422,10 @@
               "process_id": "subtract",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement4"
+                  "from_node": "arrayelement2"
                 },
                 "y": {
-                  "from_node": "arrayelement6"
+                  "from_node": "arrayelement4"
                 }
               }
             },
@@ -467,10 +433,10 @@
               "process_id": "add",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement4"
+                  "from_node": "arrayelement2"
                 },
                 "y": {
-                  "from_node": "arrayelement6"
+                  "from_node": "arrayelement4"
                 }
               }
             },
@@ -505,7 +471,7 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension4"
+          "from_node": "reducedimension2"
         },
         "label": "pvir2",
         "name": "bands",
@@ -547,7 +513,7 @@
         }
       }
     },
-    "reducedimension5": {
+    "reducedimension3": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -573,14 +539,14 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension5"
+          "from_node": "reducedimension3"
         },
         "label": "th_img",
         "name": "bands",
         "type": "bands"
       }
     },
-    "reducedimension6": {
+    "reducedimension4": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -609,11 +575,11 @@
           "from_node": "mergecubes1"
         },
         "cube2": {
-          "from_node": "reducedimension6"
+          "from_node": "reducedimension4"
         }
       }
     },
-    "reducedimension7": {
+    "reducedimension5": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -622,7 +588,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement7": {
+            "arrayelement5": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -631,7 +597,7 @@
                 "index": 10
               }
             },
-            "arrayelement8": {
+            "arrayelement6": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -644,10 +610,10 @@
               "process_id": "gt",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement7"
+                  "from_node": "arrayelement5"
                 },
                 "y": {
-                  "from_node": "arrayelement8"
+                  "from_node": "arrayelement6"
                 }
               },
               "result": true
@@ -663,7 +629,7 @@
           "from_node": "mergecubes2"
         },
         "mask": {
-          "from_node": "reducedimension7"
+          "from_node": "reducedimension5"
         }
       }
     },
@@ -680,7 +646,7 @@
         "temporal_extent": null
       }
     },
-    "reducedimension8": {
+    "reducedimension6": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -706,7 +672,7 @@
       "process_id": "resample_cube_spatial",
       "arguments": {
         "data": {
-          "from_node": "reducedimension8"
+          "from_node": "reducedimension6"
         },
         "method": "near",
         "target": {
@@ -796,7 +762,7 @@
         }
       }
     },
-    "reducedimension9": {
+    "reducedimension7": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -805,7 +771,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement9": {
+            "arrayelement7": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -823,7 +789,7 @@
       "process_id": "apply_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension9"
+          "from_node": "reducedimension7"
         },
         "dimension": "t",
         "process": {
@@ -952,7 +918,7 @@
         }
       }
     },
-    "reducedimension10": {
+    "reducedimension8": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -978,7 +944,7 @@
       "process_id": "rename_labels",
       "arguments": {
         "data": {
-          "from_node": "reducedimension10"
+          "from_node": "reducedimension8"
         },
         "dimension": "bands",
         "source": [
@@ -1007,7 +973,7 @@
         ]
       }
     },
-    "reducedimension11": {
+    "reducedimension9": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -1045,7 +1011,7 @@
           "B12"
         ],
         "data": {
-          "from_node": "reducedimension11"
+          "from_node": "reducedimension9"
         }
       }
     },
@@ -1093,7 +1059,7 @@
         }
       }
     },
-    "reducedimension12": {
+    "reducedimension10": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -1131,7 +1097,7 @@
           "B12"
         ],
         "data": {
-          "from_node": "reducedimension12"
+          "from_node": "reducedimension10"
         }
       }
     },
@@ -1179,7 +1145,7 @@
         }
       }
     },
-    "reducedimension13": {
+    "reducedimension11": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -1217,7 +1183,7 @@
           "B12"
         ],
         "data": {
-          "from_node": "reducedimension13"
+          "from_node": "reducedimension11"
         }
       }
     },
@@ -1265,7 +1231,7 @@
         }
       }
     },
-    "reducedimension14": {
+    "reducedimension12": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -1274,7 +1240,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement10": {
+            "arrayelement8": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -1288,11 +1254,11 @@
         }
       }
     },
-    "reducedimension15": {
+    "reducedimension13": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension14"
+          "from_node": "reducedimension12"
         },
         "dimension": "t",
         "reducer": {
@@ -1317,7 +1283,7 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension15"
+          "from_node": "reducedimension13"
         },
         "label": "ValidPixels",
         "name": "bands",
@@ -1335,7 +1301,7 @@
         }
       }
     },
-    "reducedimension16": {
+    "reducedimension14": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -1344,7 +1310,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement11": {
+            "arrayelement9": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -1358,11 +1324,11 @@
         }
       }
     },
-    "reducedimension17": {
+    "reducedimension15": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension16"
+          "from_node": "reducedimension14"
         },
         "dimension": "t",
         "reducer": {
@@ -1387,7 +1353,7 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension17"
+          "from_node": "reducedimension15"
         },
         "label": "BareSoilPixelsCount",
         "name": "bands",
@@ -1405,7 +1371,7 @@
         }
       }
     },
-    "reducedimension18": {
+    "reducedimension16": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -1414,7 +1380,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement12": {
+            "arrayelement10": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -1423,7 +1389,7 @@
                 "index": 43
               }
             },
-            "arrayelement13": {
+            "arrayelement11": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -1436,10 +1402,10 @@
               "process_id": "divide",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement12"
+                  "from_node": "arrayelement10"
                 },
                 "y": {
-                  "from_node": "arrayelement13"
+                  "from_node": "arrayelement11"
                 }
               },
               "result": true
@@ -1452,7 +1418,7 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension18"
+          "from_node": "reducedimension16"
         },
         "label": "BareSoilFrequency",
         "name": "bands",
