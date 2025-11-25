@@ -13,13 +13,17 @@ from typing import List, Union
 d_description = {
     "te": "Lorem Ipsum", 
     "bb": "Lorem Ipsum",
-    "cc": "Maximum allowed scene-wide cloud cover for the scene to be considered in the composite"
+    "cc": "Maximum allowed scene-wide cloud cover for the scene to be considered in the composite",
+    "sigma": "Sigma for median absolute deviation outlier detection in Band B02, default=3.0",
+    "sza": "Maximum sun zenith angle (at pixel level) for a pixel to be considered in the composite. Default value (70.0) derived from Sen2Cor recommendation."
 }
 
 S2_BANDS = "B02 B03 B04 B05 B06 B07 B08 B8A B11 B12".split()
 RES_BANDS = {
     "SRC": [f"SRC_{b}" for b in S2_BANDS],
-    "SRC-STD": [f"SRC-STD_{b}" for b in S2_BANDS]
+    "SRC-STD": [f"SRC-STD_{b}" for b in S2_BANDS],
+    "MREF": [f"MREF_{b}" for b in S2_BANDS],
+    "MREF-STD": [f"MREF-STD_{b}" for b in S2_BANDS],
 }
 
 SCL_LEGEND = {
@@ -55,7 +59,7 @@ def scl_to_masks(scl_layer):
 
         return to_mask
 
-def nmad(cube, nmad_sigma, min_offset=80.0):
+def nmad(cube: openeo.DataCube, nmad_sigma: float|Parameter, min_offset=80.0) -> openeo.DataCube:
     def _nmad(ts):
         med = ts.median()
         absdev = (ts - med).absolute()
@@ -73,7 +77,9 @@ def nmad(cube, nmad_sigma, min_offset=80.0):
 def composite(con: Connection,
               temporal_extent: List[str]|Parameter,
               spatial_extent: dict|Parameter,
-              max_cloud_cover: int|Parameter) -> openeo.DataCube:
+              max_cloud_cover: int|Parameter, 
+              nmad_sigma: float|Parameter, 
+              max_sun_zenith_angle: float=70) -> openeo.DataCube:
     """
     ...
     """
@@ -91,9 +97,17 @@ def composite(con: Connection,
         collection_id="SENTINEL2_L2A",
         temporal_extent=temporal_extent,
         spatial_extent=spatial_extent,
-        bands=["SCL"],
+        bands=['SCL', 'sunZenithAngles'],
         max_cloud_cover=max_cloud_cover,
     )
+
+    sza = con.load_collection(
+        collection_id="SENTINEL2_L2A",
+        temporal_extent=temporal_extent,
+        spatial_extent=spatial_extent,
+        bands=['SCL', 'sunZenithAngles'],
+        max_cloud_cover=max_cloud_cover,
+    ).resample_cube_spatial(scl.band('SCL'), method="near")
 
     worldcover = con.load_collection(
         "ESA_WORLDCOVER_10M_2021_V2",
@@ -103,10 +117,13 @@ def composite(con: Connection,
     )
     worldcover = worldcover.reduce_dimension(dimension="t", reducer="first")
     
+    s2_cube = s2_cube.resample_cube_spatial(scl.band('SCL'), method="near")
 
-    cloud_mask = scl.apply(process=scl_to_masks)
+    cond_scl = scl.band('SCL').apply(process=scl_to_masks)
+    cond_sza = sza > max_sun_zenith_angle
 
-    s2_cube = s2_cube.mask(cloud_mask)
+    s2_cube = s2_cube.mask(cond_scl)
+    s2_cube = s2_cube.mask(cond_sza)
 
     ### Threshold image ###
     # stac_url_th_img = "https://raw.githubusercontent.com/Schiggebam/dlr_scmap_resources/refs/heads/main/scmap-pvir2%2Bnbr-sen2cor-thresholds-eu-v1.json"
@@ -123,8 +140,14 @@ def composite(con: Connection,
     # cond_scl = ~((b_scl == SCL_LEGEND['vegetation']) | (b_scl == SCL_LEGEND['not_vegetated']) | (b_scl == SCL_LEGEND['water']))
     # s2_cube = s2_cube.mask(cond_scl)
 
-    
     s2_merged = s2_cube
+
+    #### MREF ####
+    mref = s2_merged.reduce_dimension(dimension="t", reducer="mean").filter_bands(S2_BANDS)
+    mref_std = s2_merged.reduce_dimension(dimension="t", reducer="sd").filter_bands(S2_BANDS)
+
+    mref = mref.rename_labels(dimension="bands", target=RES_BANDS["MREF"], source=S2_BANDS)
+    mref_std = mref_std.rename_labels(dimension="bands", target=RES_BANDS["MREF-STD"], source=S2_BANDS)
 
     b_04 = s2_merged.band("B04")
     b_08 = s2_merged.band("B08")
@@ -141,8 +164,6 @@ def composite(con: Connection,
     s2_merged = s2_merged.merge_cubes(pvir2_named)
     s2_merged = s2_merged.merge_cubes(th_named)
     
-    
-    # th = 0.2
     th = s2_merged.band("th_img") 
 
     mask = s2_merged.band("pvir2") > th
@@ -170,16 +191,17 @@ def composite(con: Connection,
     cond_wc = (worldcover == 50) | (worldcover == 80)
     s2_masked = s2_masked.mask(cond_wc)
 
-    s2_masked = nmad(s2_masked, 2.25)
+    s2_masked = nmad(s2_masked, nmad_sigma)
 
     src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
     src_std = s2_masked.reduce_dimension(dimension="t", reducer="sd").filter_bands(S2_BANDS)
-
 
     src = src.rename_labels(dimension="bands", target=RES_BANDS["SRC"], source=S2_BANDS)
     src_std = src_std.rename_labels(dimension="bands", target=RES_BANDS["SRC-STD"], source=S2_BANDS)
 
     combined_output = src.merge_cubes(src_std)
+    combined_output = combined_output.merge_cubes(mref)
+    combined_output = combined_output.merge_cubes(mref_std)
 
     # s2_cube = s2_cube.apply(process=udf_process)
     # scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
@@ -211,12 +233,24 @@ def generate() -> dict:
         description=d_description["cc"], 
         default=80
     )
+    # max_sun_zenith_angle = Parameter.number(
+    #     name = "max_sun_zenith_angle",
+    #     description=d_description["sza"],
+    #     default=70
+    # )
+    nmad_sigma = Parameter.number(
+        name = "nmad_sigma",
+        description=d_description["sigma"],
+        default=3.0
+    )
 
     scmap_composite = composite(
         con=con, 
         temporal_extent=temporal_extent,
         spatial_extent=spatial_extent,
-        max_cloud_cover=max_scene_cloud_cover
+        max_cloud_cover=max_scene_cloud_cover,
+        nmad_sigma=nmad_sigma, 
+        # max_sun_zenith_angle=max_sun_zenith_angle
     )
 
     schema = {
@@ -238,6 +272,8 @@ def generate() -> dict:
             temporal_extent,
             spatial_extent,
             max_scene_cloud_cover,
+            nmad_sigma, 
+            # max_sun_zenith_angle
         ],
         returns=schema,
         categories=["sentinel-2", "composites", "bare surface"]
@@ -247,7 +283,9 @@ def generate() -> dict:
 def test_run():
     con = auth()
     bbox = { "west": 11, "south": 48, "east": 11.2, "north": 48.2, "crs": "EPSG:4326"}
-    temporal_extent = ["2025-04-15", "2025-05-07"]
+    temporal_extent = ["2025-04-01", "2025-05-07"]
+    nmad_sigma = 2.75
+    max_sun_zenith_angle = 70.0
     # composite = con.datacube_from_process(
     #     "scmap_composite",
     #     namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap_composite.json",
@@ -261,6 +299,8 @@ def test_run():
         temporal_extent=temporal_extent,
         spatial_extent=bbox,
         max_cloud_cover=80,
+        nmad_sigma=nmad_sigma,
+        max_sun_zenith_angle=max_sun_zenith_angle
     )
     job = scmap_composite.create_job(title="scmap_composite")
     job.start_and_wait()

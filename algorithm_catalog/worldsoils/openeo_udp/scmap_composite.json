@@ -46,7 +46,8 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "SCL"
+          "SCL",
+          "sunZenithAngles"
         ],
         "id": "SENTINEL2_L2A",
         "properties": {
@@ -75,11 +76,69 @@
         }
       }
     },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection2"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement1": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "resamplecubespatial1": {
+      "process_id": "resample_cube_spatial",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "method": "near",
+        "target": {
+          "from_node": "reducedimension1"
+        }
+      }
+    },
+    "reducedimension2": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection2"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement2": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
     "apply1": {
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "loadcollection2"
+          "from_node": "reducedimension2"
         },
         "process": {
           "process_graph": {
@@ -215,23 +274,125 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "loadcollection1"
+          "from_node": "resamplecubespatial1"
         },
         "mask": {
           "from_node": "apply1"
         }
       }
     },
-    "reducedimension1": {
+    "loadcollection3": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "SCL",
+          "sunZenithAngles"
+        ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte3": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": {
+                    "from_parameter": "max_cloud_cover"
+                  }
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": {
+          "from_parameter": "temporal_extent"
+        }
+      }
+    },
+    "reducedimension3": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mask1"
+          "from_node": "loadcollection2"
         },
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement1": {
+            "arrayelement3": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "resamplecubespatial2": {
+      "process_id": "resample_cube_spatial",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection3"
+        },
+        "method": "near",
+        "target": {
+          "from_node": "reducedimension3"
+        }
+      }
+    },
+    "apply2": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "resamplecubespatial2"
+        },
+        "process": {
+          "process_graph": {
+            "gt1": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 70
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mask2": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "mask1"
+        },
+        "mask": {
+          "from_node": "apply2"
+        }
+      }
+    },
+    "reducedimension4": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask2"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement4": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -240,7 +401,7 @@
                 "index": 6
               }
             },
-            "arrayelement2": {
+            "arrayelement5": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -253,10 +414,10 @@
               "process_id": "subtract",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement4"
                 },
                 "y": {
-                  "from_node": "arrayelement2"
+                  "from_node": "arrayelement5"
                 }
               }
             },
@@ -264,10 +425,10 @@
               "process_id": "add",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement4"
                 },
                 "y": {
-                  "from_node": "arrayelement2"
+                  "from_node": "arrayelement5"
                 }
               }
             },
@@ -282,7 +443,7 @@
                 }
               }
             },
-            "arrayelement3": {
+            "arrayelement6": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -295,10 +456,10 @@
               "process_id": "subtract",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement4"
                 },
                 "y": {
-                  "from_node": "arrayelement3"
+                  "from_node": "arrayelement6"
                 }
               }
             },
@@ -306,10 +467,10 @@
               "process_id": "add",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement4"
                 },
                 "y": {
-                  "from_node": "arrayelement3"
+                  "from_node": "arrayelement6"
                 }
               }
             },
@@ -344,7 +505,7 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension1"
+          "from_node": "reducedimension4"
         },
         "label": "pvir2",
         "name": "bands",
@@ -355,7 +516,7 @@
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "mask1"
+          "from_node": "mask2"
         },
         "cube2": {
           "from_node": "adddimension1"
@@ -374,7 +535,7 @@
         "url": "https://raw.githubusercontent.com/Schiggebam/dlr_scmap_resources/refs/heads/main/th_S2_s2cr_buffered_stac_yflip_no_t.json"
       }
     },
-    "resamplecubespatial1": {
+    "resamplecubespatial3": {
       "process_id": "resample_cube_spatial",
       "arguments": {
         "data": {
@@ -382,15 +543,15 @@
         },
         "method": "bilinear",
         "target": {
-          "from_node": "mask1"
+          "from_node": "mask2"
         }
       }
     },
-    "reducedimension2": {
+    "reducedimension5": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial1"
+          "from_node": "resamplecubespatial3"
         },
         "dimension": "bands",
         "reducer": {
@@ -412,14 +573,14 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension2"
+          "from_node": "reducedimension5"
         },
         "label": "th_img",
         "name": "bands",
         "type": "bands"
       }
     },
-    "reducedimension3": {
+    "reducedimension6": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -448,11 +609,11 @@
           "from_node": "mergecubes1"
         },
         "cube2": {
-          "from_node": "reducedimension3"
+          "from_node": "reducedimension6"
         }
       }
     },
-    "reducedimension4": {
+    "reducedimension7": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -461,7 +622,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement4": {
+            "arrayelement7": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -470,7 +631,7 @@
                 "index": 10
               }
             },
-            "arrayelement5": {
+            "arrayelement8": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -479,14 +640,14 @@
                 "index": 11
               }
             },
-            "gt1": {
+            "gt2": {
               "process_id": "gt",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement4"
+                  "from_node": "arrayelement7"
                 },
                 "y": {
-                  "from_node": "arrayelement5"
+                  "from_node": "arrayelement8"
                 }
               },
               "result": true
@@ -495,18 +656,18 @@
         }
       }
     },
-    "mask2": {
+    "mask3": {
       "process_id": "mask",
       "arguments": {
         "data": {
           "from_node": "mergecubes2"
         },
         "mask": {
-          "from_node": "reducedimension4"
+          "from_node": "reducedimension7"
         }
       }
     },
-    "loadcollection3": {
+    "loadcollection4": {
       "process_id": "load_collection",
       "arguments": {
         "bands": [
@@ -519,11 +680,11 @@
         "temporal_extent": null
       }
     },
-    "reducedimension5": {
+    "reducedimension8": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "loadcollection3"
+          "from_node": "loadcollection4"
         },
         "dimension": "t",
         "reducer": {
@@ -541,23 +702,23 @@
         }
       }
     },
-    "resamplecubespatial2": {
+    "resamplecubespatial4": {
       "process_id": "resample_cube_spatial",
       "arguments": {
         "data": {
-          "from_node": "reducedimension5"
+          "from_node": "reducedimension8"
         },
         "method": "near",
         "target": {
-          "from_node": "mask1"
+          "from_node": "mask2"
         }
       }
     },
-    "apply2": {
+    "apply3": {
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial2"
+          "from_node": "resamplecubespatial4"
         },
         "process": {
           "process_graph": {
@@ -575,11 +736,11 @@
         }
       }
     },
-    "apply3": {
+    "apply4": {
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial2"
+          "from_node": "resamplecubespatial4"
         },
         "process": {
           "process_graph": {
@@ -601,10 +762,10 @@
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "apply2"
+          "from_node": "apply3"
         },
         "cube2": {
-          "from_node": "apply3"
+          "from_node": "apply4"
         },
         "overlap_resolver": {
           "process_graph": {
@@ -624,27 +785,27 @@
         }
       }
     },
-    "mask3": {
+    "mask4": {
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "mask2"
+          "from_node": "mask3"
         },
         "mask": {
           "from_node": "mergecubes3"
         }
       }
     },
-    "reducedimension6": {
+    "reducedimension9": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mask3"
+          "from_node": "mask4"
         },
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement6": {
+            "arrayelement9": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -662,7 +823,7 @@
       "process_id": "apply_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension6"
+          "from_node": "reducedimension9"
         },
         "dimension": "t",
         "process": {
@@ -714,7 +875,9 @@
             "multiply2": {
               "process_id": "multiply",
               "arguments": {
-                "x": 2.25,
+                "x": {
+                  "from_parameter": "nmad_sigma"
+                },
                 "y": {
                   "from_node": "multiply1"
                 }
@@ -731,7 +894,7 @@
                 }
               }
             },
-            "gt2": {
+            "gt3": {
               "process_id": "gt",
               "arguments": {
                 "x": {
@@ -751,7 +914,7 @@
                 "y": 80.0
               }
             },
-            "gt3": {
+            "gt4": {
               "process_id": "gt",
               "arguments": {
                 "x": {
@@ -766,10 +929,10 @@
               "process_id": "and",
               "arguments": {
                 "x": {
-                  "from_node": "gt2"
+                  "from_node": "gt3"
                 },
                 "y": {
-                  "from_node": "gt3"
+                  "from_node": "gt4"
                 }
               },
               "result": true
@@ -778,22 +941,22 @@
         }
       }
     },
-    "mask4": {
+    "mask5": {
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "mask3"
+          "from_node": "mask4"
         },
         "mask": {
           "from_node": "applydimension1"
         }
       }
     },
-    "reducedimension7": {
+    "reducedimension10": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mask4"
+          "from_node": "mask5"
         },
         "dimension": "t",
         "reducer": {
@@ -815,7 +978,7 @@
       "process_id": "rename_labels",
       "arguments": {
         "data": {
-          "from_node": "reducedimension7"
+          "from_node": "reducedimension10"
         },
         "dimension": "bands",
         "source": [
@@ -844,11 +1007,11 @@
         ]
       }
     },
-    "reducedimension8": {
+    "reducedimension11": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mask4"
+          "from_node": "mask5"
         },
         "dimension": "t",
         "reducer": {
@@ -882,7 +1045,7 @@
           "B12"
         ],
         "data": {
-          "from_node": "reducedimension8"
+          "from_node": "reducedimension11"
         }
       }
     },
@@ -927,6 +1090,178 @@
         },
         "cube2": {
           "from_node": "renamelabels2"
+        }
+      }
+    },
+    "reducedimension12": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask2"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "mean3": {
+              "process_id": "mean",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "filterbands2": {
+      "process_id": "filter_bands",
+      "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "data": {
+          "from_node": "reducedimension12"
+        }
+      }
+    },
+    "renamelabels3": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "filterbands2"
+        },
+        "dimension": "bands",
+        "source": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "target": [
+          "MREF_B02",
+          "MREF_B03",
+          "MREF_B04",
+          "MREF_B05",
+          "MREF_B06",
+          "MREF_B07",
+          "MREF_B08",
+          "MREF_B8A",
+          "MREF_B11",
+          "MREF_B12"
+        ]
+      }
+    },
+    "mergecubes5": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes4"
+        },
+        "cube2": {
+          "from_node": "renamelabels3"
+        }
+      }
+    },
+    "reducedimension13": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask2"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "sd2": {
+              "process_id": "sd",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "filterbands3": {
+      "process_id": "filter_bands",
+      "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "data": {
+          "from_node": "reducedimension13"
+        }
+      }
+    },
+    "renamelabels4": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "filterbands3"
+        },
+        "dimension": "bands",
+        "source": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "target": [
+          "MREF-STD_B02",
+          "MREF-STD_B03",
+          "MREF-STD_B04",
+          "MREF-STD_B05",
+          "MREF-STD_B06",
+          "MREF-STD_B07",
+          "MREF-STD_B08",
+          "MREF-STD_B8A",
+          "MREF-STD_B11",
+          "MREF-STD_B12"
+        ]
+      }
+    },
+    "mergecubes6": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes5"
+        },
+        "cube2": {
+          "from_node": "renamelabels4"
         }
       },
       "result": true
@@ -1040,6 +1375,15 @@
         "type": "number"
       },
       "default": 80,
+      "optional": true
+    },
+    {
+      "name": "nmad_sigma",
+      "description": "Sigma for median absolute deviation outlier detection in Band B02, default=3.0",
+      "schema": {
+        "type": "number"
+      },
+      "default": 3.0,
       "optional": true
     }
   ]
