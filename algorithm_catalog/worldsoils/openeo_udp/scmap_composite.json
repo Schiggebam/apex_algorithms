@@ -712,11 +712,31 @@
         }
       }
     },
+    "filterbands1": {
+      "process_id": "filter_bands",
+      "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "data": {
+          "from_node": "reducedimension7"
+        }
+      }
+    },
     "renamelabels2": {
       "process_id": "rename_labels",
       "arguments": {
         "data": {
-          "from_node": "reducedimension7"
+          "from_node": "filterbands1"
         },
         "dimension": "bands",
         "source": [

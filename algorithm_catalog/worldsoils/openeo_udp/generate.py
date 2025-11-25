@@ -156,9 +156,13 @@ def composite(con: Connection,
     s2_masked = s2_masked.mask(cond_wc)
 
     src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
-    src_std = s2_masked.reduce_dimension(dimension="t", reducer="sd")
+    src_std = s2_masked.reduce_dimension(dimension="t", reducer="sd").filter_bands(S2_BANDS)
+
+
     src = src.rename_labels(dimension="bands", target=RES_BANDS["SRC"], source=S2_BANDS)
     src_std = src_std.rename_labels(dimension="bands", target=RES_BANDS["SRC-STD"], source=S2_BANDS)
+
+    
 
     combined_output = src.merge_cubes(src_std)
 
