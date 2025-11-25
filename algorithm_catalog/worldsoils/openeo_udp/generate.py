@@ -84,7 +84,37 @@ def composite(con: Connection,
               nmad_sigma: float|Parameter, 
               max_sun_zenith_angle: float=70) -> openeo.DataCube:
     """
-    ...
+    Generate a Bare Surface Composite (SRC) and additional derived products.
+
+    This function loads Sentinel-2 data through the provided openEO
+    connection, applies quality filtering (cloud cover, SZA), performs
+    NMAD-based outlier masking, and produces a temporal bare-sruface composite 
+    and other by-products.
+    The resulting product is returned as an openEO `DataCube`.
+
+    Parameters
+    ----------
+    con : Connection
+        An active openEO `Connection` used to load and process data.
+    temporal_extent : list[str] or Parameter
+        Start and end date of the period to composite
+        (e.g. `["2022-01-01", "2022-12-31"]`). May also be provided
+        as an openEO process parameter.
+    spatial_extent : dict or Parameter
+        Spatial extent (bounding box or polygon) defining the area of
+        interest as defined by openEO spatial extent conventions.
+    max_cloud_cover : int or Parameter
+        Maximum allowed cloud cover percentage for selecting images.
+    nmad_sigma : float or Parameter
+        Threshold (in units of NMAD) used to mask outliers prior to
+        compositing.
+    max_sun_zenith_angle : float, optional
+        Upper limit for the sun zenith angle filter, by default 70 degrees.
+
+    Returns
+    -------
+    openeo.DataCube
+        A merged data cube containing the Bare Surface Composite and by-products
     """
 
     ### Input Data ###
@@ -175,25 +205,6 @@ def composite(con: Connection,
 
     mask = s2_merged.band("pvir2") > th
     s2_masked = s2_merged.mask(mask)
-
-    # value = 3.1415
-# 
-    # udf_process = openeo.UDF.from_file(
-    #     Path(__file__).parent / "scmap_composite_udf.py",
-    #     runtime="Python", 
-    #     version="3.8",
-    #     context={
-    #         'value': value
-    #     }
-    # )
-    # udf = openeo.UDF.from_file(
-    #     Path(__file__).parent / "dynamic_masking_udf.py",
-    #     runtime="Python",
-    #     version="3.8"
-    # )
-
-    # pvir2 = s2_merged.band("pvir2")
-    # s2_masked = s2_merged.apply_dimension(dimension="bands", process=mask_x)
     
     cond_wc = (worldcover == 50) | (worldcover == 80)
     s2_masked = s2_masked.mask(cond_wc)
@@ -304,12 +315,12 @@ test_setup_small = {
 
 test_setup_large = {
     "bbox": { "west": 10.8, "south": 47.8, "east": 11.3, "north": 48.2, "crs": "EPSG:4326"},
-    "temporal_extent": ["2024-02-01", "2024-11-31"],
+    "temporal_extent": ["2023-02-01", "2024-11-31"],
     "nmad_sigma": 3.0,
     "max_sun_zenith_angle": 70.0,
 }
 
-def test_run(d_test_setup=test_setup_small, path_out=Path("./result/SCMaP_output.tif")):
+def test_run(d_test_setup=test_setup_large, path_out=Path("./result/")):
     con = auth()
     bbox = d_test_setup["bbox"]
     temporal_extent = d_test_setup["temporal_extent"]
