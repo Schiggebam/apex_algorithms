@@ -1456,7 +1456,7 @@
   "parameters": [
     {
       "name": "temporal_extent",
-      "description": "Lorem Ipsum",
+      "description": "Temporal extend",
       "schema": {
         "type": "array",
         "subtype": "temporal-interval",
@@ -1484,7 +1484,7 @@
     },
     {
       "name": "bounding_box",
-      "description": "Lorem Ipsum",
+      "description": "Bounding Box",
       "schema": {
         "type": "object",
         "subtype": "bounding-box",

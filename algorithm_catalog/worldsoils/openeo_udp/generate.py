@@ -11,8 +11,8 @@ from openeo.rest.connection import Connection
 from typing import List, Union
 
 d_description = {
-    "te": "Lorem Ipsum", 
-    "bb": "Lorem Ipsum",
+    "te": "Temporal extend", 
+    "bb": "Bounding Box",
     "cc": "Maximum allowed scene-wide cloud cover for the scene to be considered in the composite",
     "sigma": "Sigma for median absolute deviation outlier detection in Band B02, default=3.0",
     "sza": "Maximum sun zenith angle (at pixel level) for a pixel to be considered in the composite. Default value (70.0) derived from Sen2Cor recommendation."
@@ -307,7 +307,7 @@ def generate() -> dict:
     )
 
 test_setup_small = {
-    "bbox": { "west": 11, "south": 48, "east": 11.2, "north": 48.2, "crs": "EPSG:4326"},
+    "bbox": { "west": 11.1, "south": 48.1, "east": 11.2, "north": 48.2, "crs": "EPSG:4326"},
     "temporal_extent": ["2025-04-01", "2025-05-07"],
     "nmad_sigma": 3.0,
     "max_sun_zenith_angle": 70.0,
@@ -320,7 +320,7 @@ test_setup_large = {
     "max_sun_zenith_angle": 70.0,
 }
 
-def test_run(d_test_setup=test_setup_large, path_out=Path("./result/")):
+def test_run(d_test_setup=test_setup_small, path_out=Path("./result/")):
     con = auth()
     bbox = d_test_setup["bbox"]
     temporal_extent = d_test_setup["temporal_extent"]
