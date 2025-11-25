@@ -94,7 +94,7 @@ def composite(con: Connection,
         spatial_extent=spatial_extent,
         temporal_extent=temporal_extent,
         max_cloud_cover=max_cloud_cover,
-    ).resample_spatial(resolution=20)
+    ).resample_spatial(resolution=20, method="average")
 
     scl = con.load_collection(
         collection_id="SENTINEL2_L2A",
@@ -102,7 +102,7 @@ def composite(con: Connection,
         spatial_extent=spatial_extent,
         bands=['SCL', 'sunZenithAngles'],
         max_cloud_cover=max_cloud_cover,
-    ).resample_cube_spatial(s2_cube, method="near")
+    ).resample_cube_spatial(s2_cube, method="mode")
 
     sza = con.load_collection(
         collection_id="SENTINEL2_L2A",
@@ -125,8 +125,9 @@ def composite(con: Connection,
     cond_scl = scl.band('SCL').apply(process=scl_to_masks)
     cond_sza = sza > max_sun_zenith_angle
 
-    s2_cube = s2_cube.mask(cond_scl)
     s2_cube = s2_cube.mask(cond_sza)
+    sfreq_valid = s2_cube.band(S2_BANDS[0]).reduce_dimension(dimension="t", reducer="count").add_dimension(name="bands", label=RES_BANDS["SFREQ-VALID"], type="bands")
+    s2_cube = s2_cube.mask(cond_scl)
 
     ### Threshold image ###
     # stac_url_th_img = "https://raw.githubusercontent.com/Schiggebam/dlr_scmap_resources/refs/heads/main/scmap-pvir2%2Bnbr-sen2cor-thresholds-eu-v1.json"
@@ -151,7 +152,7 @@ def composite(con: Connection,
 
     mref = mref.rename_labels(dimension="bands", target=RES_BANDS["MREF"], source=S2_BANDS)
     mref_std = mref_std.rename_labels(dimension="bands", target=RES_BANDS["MREF-STD"], source=S2_BANDS)
-    sfreq_valid = s2_merged.band(S2_BANDS[0]).reduce_dimension(dimension="t", reducer="count").add_dimension(name="bands", label=RES_BANDS["SFREQ-VALID"], type="bands")
+    
     # sfreq_valid.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-VALID"], source=S2_BANDS[0])
     ################
 
@@ -294,21 +295,27 @@ def generate() -> dict:
         categories=["sentinel-2", "composites", "bare surface"]
     )
 
+test_setup_small = {
+    "bbox": { "west": 11, "south": 48, "east": 11.2, "north": 48.2, "crs": "EPSG:4326"},
+    "temporal_extent": ["2025-04-01", "2025-05-07"],
+    "nmad_sigma": 3.0,
+    "max_sun_zenith_angle": 70.0,
+}
 
-def test_run():
+test_setup_large = {
+    "bbox": { "west": 10.8, "south": 47.8, "east": 11.3, "north": 48.2, "crs": "EPSG:4326"},
+    "temporal_extent": ["2024-02-01", "2024-11-31"],
+    "nmad_sigma": 3.0,
+    "max_sun_zenith_angle": 70.0,
+}
+
+def test_run(d_test_setup=test_setup_small, path_out=Path("./result/SCMaP_output.tif")):
     con = auth()
-    bbox = { "west": 11, "south": 48, "east": 11.2, "north": 48.2, "crs": "EPSG:4326"}
-    temporal_extent = ["2025-04-01", "2025-05-07"]
-    nmad_sigma = 2.75
-    max_sun_zenith_angle = 70.0
-    # composite = con.datacube_from_process(
-    #     "scmap_composite",
-    #     namespace="https://raw.githubusercontent.com/Schiggebam/apex_algorithms/refs/heads/scmap/algorithm_catalog/worldsoils/openeo_udp/scmap_composite.json",
-    #     temporal_extent=temporal_extent,
-    #     spatial_extent=bbox,
-    #     max_cloud_cover=80
-    # )
-    # composite.execute_batch()
+    bbox = d_test_setup["bbox"]
+    temporal_extent = d_test_setup["temporal_extent"]
+    nmad_sigma = d_test_setup["nmad_sigma"]
+    max_sun_zenith_angle = d_test_setup["max_sun_zenith_angle"]
+
     scmap_composite = composite(
         con=con,
         temporal_extent=temporal_extent,
@@ -317,16 +324,23 @@ def test_run():
         nmad_sigma=nmad_sigma,
         max_sun_zenith_angle=max_sun_zenith_angle
     )
+
     job = scmap_composite.create_job(title="scmap_composite")
     job.start_and_wait()
-    job.get_results().download_files("./out")
+    path_out.mkdir(parents=True, exist_ok=True)
+    job.get_results().download_files(path_out.as_posix())
 
 
 if __name__ == "__main__":
-    if False:
-        test_run()
-        exit()
-    # save process to json
-    with open(Path(__file__).parent / "scmap_composite.json", "w") as fp:
-        json.dump(generate(), fp, indent=2)
+    import argparse
+    parser = argparse.ArgumentParser(description="scmap openEO implmementation")
+    parser.add_argument("--test", action="store_true", help="Run test case")
+
+    args = parser.parse_args()
+    if args.test:
+        test_run(d_test_setup=test_setup_small)
+    else:
+        # save process to json
+        with open(Path(__file__).parent / "scmap_composite.json", "w") as fp:
+            json.dump(generate(), fp, indent=2)
 
