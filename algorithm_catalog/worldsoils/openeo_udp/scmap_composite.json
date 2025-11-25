@@ -657,6 +657,39 @@
         }
       }
     },
+    "renamelabels1": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension6"
+        },
+        "dimension": "bands",
+        "source": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "target": [
+          "SRC_B02",
+          "SRC_B03",
+          "SRC_B04",
+          "SRC_B05",
+          "SRC_B06",
+          "SRC_B07",
+          "SRC_B08",
+          "SRC_B8A",
+          "SRC_B11",
+          "SRC_B12"
+        ]
+      }
+    },
     "reducedimension7": {
       "process_id": "reduce_dimension",
       "arguments": {
@@ -676,6 +709,50 @@
               "result": true
             }
           }
+        }
+      }
+    },
+    "renamelabels2": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension7"
+        },
+        "dimension": "bands",
+        "source": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
+        ],
+        "target": [
+          "SRC-STD_B02",
+          "SRC-STD_B03",
+          "SRC-STD_B04",
+          "SRC-STD_B05",
+          "SRC-STD_B06",
+          "SRC-STD_B07",
+          "SRC-STD_B08",
+          "SRC-STD_B8A",
+          "SRC-STD_B11",
+          "SRC-STD_B12"
+        ]
+      }
+    },
+    "mergecubes4": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "renamelabels1"
+        },
+        "cube2": {
+          "from_node": "renamelabels2"
         }
       },
       "result": true

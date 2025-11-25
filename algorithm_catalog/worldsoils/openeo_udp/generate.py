@@ -17,6 +17,10 @@ d_description = {
 }
 
 S2_BANDS = "B02 B03 B04 B05 B06 B07 B08 B8A B11 B12".split()
+RES_BANDS = {
+    "SRC": [f"SRC_{b}" for b in S2_BANDS],
+    "SRC-STD": [f"SRC-STD_{b}" for b in S2_BANDS]
+}
 
 SCL_LEGEND = {
         "no_data": 0,
@@ -153,11 +157,15 @@ def composite(con: Connection,
 
     src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
     src_std = s2_masked.reduce_dimension(dimension="t", reducer="sd")
+    src = src.rename_labels(dimension="bands", target=RES_BANDS["SRC"], source=S2_BANDS)
+    src_std = src_std.rename_labels(dimension="bands", target=RES_BANDS["SRC-STD"], source=S2_BANDS)
+
+    combined_output = src.merge_cubes(src_std)
 
     # s2_cube = s2_cube.apply(process=udf_process)
     # scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
 
-    return src, src_std
+    return combined_output
 
 
 def auth(url: str="openeo.dataspace.copernicus.eu") -> Connection:
