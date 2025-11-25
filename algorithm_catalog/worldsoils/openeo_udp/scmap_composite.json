@@ -1263,6 +1263,211 @@
         "cube2": {
           "from_node": "renamelabels4"
         }
+      }
+    },
+    "reducedimension14": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask2"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement10": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "reducedimension15": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension14"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "count1": {
+              "process_id": "count",
+              "arguments": {
+                "context": {
+                  "from_parameter": "context"
+                },
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension3": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension15"
+        },
+        "label": "ValidPixels",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "mergecubes7": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes6"
+        },
+        "cube2": {
+          "from_node": "adddimension3"
+        }
+      }
+    },
+    "reducedimension16": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask5"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement11": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "reducedimension17": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension16"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "count2": {
+              "process_id": "count",
+              "arguments": {
+                "context": {
+                  "from_parameter": "context"
+                },
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension4": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension17"
+        },
+        "label": "BareSoilPixelsCount",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "mergecubes8": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes7"
+        },
+        "cube2": {
+          "from_node": "adddimension4"
+        }
+      }
+    },
+    "reducedimension18": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mergecubes8"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement12": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 43
+              }
+            },
+            "arrayelement13": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 42
+              }
+            },
+            "divide3": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement12"
+                },
+                "y": {
+                  "from_node": "arrayelement13"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension5": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension18"
+        },
+        "label": "BareSoilFrequency",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "mergecubes9": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes8"
+        },
+        "cube2": {
+          "from_node": "adddimension5"
+        }
       },
       "result": true
     }

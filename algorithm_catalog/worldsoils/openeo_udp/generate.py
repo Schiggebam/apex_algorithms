@@ -24,6 +24,9 @@ RES_BANDS = {
     "SRC-STD": [f"SRC-STD_{b}" for b in S2_BANDS],
     "MREF": [f"MREF_{b}" for b in S2_BANDS],
     "MREF-STD": [f"MREF-STD_{b}" for b in S2_BANDS],
+    "SFREQ-VALID": "ValidPixels",
+    "SFREQ-COUNT": "BareSoilPixelsCount",
+    "SFREQ-FREQ": "BareSoilFrequency"
 }
 
 SCL_LEGEND = {
@@ -148,6 +151,9 @@ def composite(con: Connection,
 
     mref = mref.rename_labels(dimension="bands", target=RES_BANDS["MREF"], source=S2_BANDS)
     mref_std = mref_std.rename_labels(dimension="bands", target=RES_BANDS["MREF-STD"], source=S2_BANDS)
+    sfreq_valid = s2_merged.band(S2_BANDS[0]).reduce_dimension(dimension="t", reducer="count").add_dimension(name="bands", label=RES_BANDS["SFREQ-VALID"], type="bands")
+    # sfreq_valid.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-VALID"], source=S2_BANDS[0])
+    ################
 
     b_04 = s2_merged.band("B04")
     b_08 = s2_merged.band("B08")
@@ -199,9 +205,18 @@ def composite(con: Connection,
     src = src.rename_labels(dimension="bands", target=RES_BANDS["SRC"], source=S2_BANDS)
     src_std = src_std.rename_labels(dimension="bands", target=RES_BANDS["SRC-STD"], source=S2_BANDS)
 
+    sfreq_count = s2_masked.band(S2_BANDS[0]).reduce_dimension(dimension="t", reducer="count").add_dimension(name="bands", label=RES_BANDS["SFREQ-COUNT"], type="bands")
+    # sfreq_count.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-COUNT"], source=S2_BANDS[0])
+
     combined_output = src.merge_cubes(src_std)
     combined_output = combined_output.merge_cubes(mref)
     combined_output = combined_output.merge_cubes(mref_std)
+    combined_output = combined_output.merge_cubes(sfreq_valid)
+    combined_output = combined_output.merge_cubes(sfreq_count)
+    sfreq_freq = combined_output.band(RES_BANDS["SFREQ-COUNT"]) / combined_output.band(RES_BANDS["SFREQ-VALID"])
+    sfreq_freq = sfreq_freq.add_dimension(name="bands", label=RES_BANDS["SFREQ-FREQ"], type="bands")
+    # sfreq_freq.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-FREQ"])
+    combined_output = combined_output.merge_cubes(sfreq_freq)
 
     # s2_cube = s2_cube.apply(process=udf_process)
     # scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
