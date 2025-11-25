@@ -641,6 +641,160 @@
         "data": {
           "from_node": "mask3"
         },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement6": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "applydimension1": {
+      "process_id": "apply_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension6"
+        },
+        "dimension": "t",
+        "process": {
+          "process_graph": {
+            "median1": {
+              "process_id": "median",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              }
+            },
+            "subtract3": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_parameter": "data"
+                },
+                "y": {
+                  "from_node": "median1"
+                }
+              }
+            },
+            "absolute1": {
+              "process_id": "absolute",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract3"
+                }
+              }
+            },
+            "median2": {
+              "process_id": "median",
+              "arguments": {
+                "data": {
+                  "from_node": "absolute1"
+                }
+              }
+            },
+            "multiply1": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "median2"
+                },
+                "y": 1.4826
+              }
+            },
+            "multiply2": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2.25,
+                "y": {
+                  "from_node": "multiply1"
+                }
+              }
+            },
+            "add4": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "median1"
+                },
+                "y": {
+                  "from_node": "multiply2"
+                }
+              }
+            },
+            "gt2": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_parameter": "data"
+                },
+                "y": {
+                  "from_node": "add4"
+                }
+              }
+            },
+            "add5": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "median1"
+                },
+                "y": 80.0
+              }
+            },
+            "gt3": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_parameter": "data"
+                },
+                "y": {
+                  "from_node": "add5"
+                }
+              }
+            },
+            "and1": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "gt2"
+                },
+                "y": {
+                  "from_node": "gt3"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mask4": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "mask3"
+        },
+        "mask": {
+          "from_node": "applydimension1"
+        }
+      }
+    },
+    "reducedimension7": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask4"
+        },
         "dimension": "t",
         "reducer": {
           "process_graph": {
@@ -661,7 +815,7 @@
       "process_id": "rename_labels",
       "arguments": {
         "data": {
-          "from_node": "reducedimension6"
+          "from_node": "reducedimension7"
         },
         "dimension": "bands",
         "source": [
@@ -690,11 +844,11 @@
         ]
       }
     },
-    "reducedimension7": {
+    "reducedimension8": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mask3"
+          "from_node": "mask4"
         },
         "dimension": "t",
         "reducer": {
@@ -728,7 +882,7 @@
           "B12"
         ],
         "data": {
-          "from_node": "reducedimension7"
+          "from_node": "reducedimension8"
         }
       }
     },

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import openeo
 from openeo.api.process import Parameter
-from openeo.processes import array_create
+from openeo.processes import array_create, and_
 from openeo.rest.udp import build_process_dict
 from openeo.rest.connection import Connection
 
@@ -54,6 +54,21 @@ def scl_to_masks(scl_layer):
         )
 
         return to_mask
+
+def nmad(cube, nmad_sigma, min_offset=80.0):
+    def _nmad(ts):
+        med = ts.median()
+        absdev = (ts - med).absolute()
+        mad   = absdev.median()
+        nmad  = mad * 1.4826
+
+        upper = med + nmad_sigma * nmad
+        min_limit = med + min_offset
+        return and_(ts.gt(upper), ts.gt(min_limit))       # logicals need to be called as functions
+    
+    b02 = cube.band("B02")
+    is_outlier = b02.apply_dimension(dimension="t", process=_nmad)
+    return cube.mask(is_outlier)
 
 def composite(con: Connection,
               temporal_extent: List[str]|Parameter,
@@ -155,14 +170,14 @@ def composite(con: Connection,
     cond_wc = (worldcover == 50) | (worldcover == 80)
     s2_masked = s2_masked.mask(cond_wc)
 
+    s2_masked = nmad(s2_masked, 2.25)
+
     src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
     src_std = s2_masked.reduce_dimension(dimension="t", reducer="sd").filter_bands(S2_BANDS)
 
 
     src = src.rename_labels(dimension="bands", target=RES_BANDS["SRC"], source=S2_BANDS)
     src_std = src_std.rename_labels(dimension="bands", target=RES_BANDS["SRC-STD"], source=S2_BANDS)
-
-    
 
     combined_output = src.merge_cubes(src_std)
 
