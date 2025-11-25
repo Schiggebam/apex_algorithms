@@ -371,7 +371,7 @@
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
-        "url": "https://raw.githubusercontent.com/EmileSonneveld/dlr_scmap_resources/refs/heads/main/th_S2_s2cr_buffered_stac_yflip.json"
+        "url": "https://raw.githubusercontent.com/Schiggebam/dlr_scmap_resources/refs/heads/main/th_S2_s2cr_buffered_stac_yflip_no_t.json"
       }
     },
     "resamplecubespatial1": {
@@ -506,11 +506,140 @@
         }
       }
     },
+    "loadcollection3": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "MAP"
+        ],
+        "id": "ESA_WORLDCOVER_10M_2021_V2",
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": null
+      }
+    },
     "reducedimension5": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
+          "from_node": "loadcollection3"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "first2": {
+              "process_id": "first",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "resamplecubespatial2": {
+      "process_id": "resample_cube_spatial",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension5"
+        },
+        "method": "near",
+        "target": {
+          "from_node": "mask1"
+        }
+      }
+    },
+    "apply2": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "resamplecubespatial2"
+        },
+        "process": {
+          "process_graph": {
+            "eq10": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 50
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply3": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "resamplecubespatial2"
+        },
+        "process": {
+          "process_graph": {
+            "eq11": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 80
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mergecubes3": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "apply2"
+        },
+        "cube2": {
+          "from_node": "apply3"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "or1": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "y"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mask3": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
           "from_node": "mask2"
+        },
+        "mask": {
+          "from_node": "mergecubes3"
+        }
+      }
+    },
+    "reducedimension6": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask3"
         },
         "dimension": "t",
         "reducer": {
