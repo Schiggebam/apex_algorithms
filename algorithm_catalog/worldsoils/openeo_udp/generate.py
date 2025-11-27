@@ -84,14 +84,19 @@ def _ci95(combined_cube: openeo.DataCube, sd_bands: List[str], n: str) -> openeo
     +- 1.96 * (sd / sqrt(n))
     """
     z = 1.96
+    cubes = []
     for b in sd_bands:
         sd_cube = combined_cube.filter_bands(b)
         n_sqrt = combined_cube.band(n).apply("sqrt")
         ci = sd_cube.divide(n_sqrt)
         ci = ci * z
         ci = ci.rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"])
-        combined_cube.merge_cubes(ci)
-    return combined_cube.merge_cubes(ci)
+        cubes.append(ci)
+        # combined_cube.merge_cubes(ci)
+    for i in range(1, len(cubes)):
+        cubes[0] = cubes[0].merge_cubes(cubes[i])
+    
+    return cubes[0]
 
 
 def composite(con: Connection,
@@ -250,7 +255,8 @@ def composite(con: Connection,
     combined_output = combined_output.merge_cubes(sfreq_count)
     
     # inner math
-    combined_output = _ci95(combined_output, RES_BANDS["SRC-STD"], RES_BANDS["SFREQ-COUNT"])
+    ci = _ci95(combined_output, RES_BANDS["SRC-STD"], RES_BANDS["SFREQ-COUNT"])
+    combined_output = combined_output.merge_cubes(ci)
     sfreq_freq = combined_output.band(RES_BANDS["SFREQ-COUNT"]) / combined_output.band(RES_BANDS["SFREQ-VALID"])
     sfreq_freq = sfreq_freq.add_dimension(name="bands", label=RES_BANDS["SFREQ-FREQ"], type="bands")
     # sfreq_freq = sfreq_freq.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-FREQ"], source=[RES_BANDS["SFREQ-COUNT"]])
