@@ -1482,7 +1482,9 @@
           "from_node": "apply6"
         },
         "dimension": "bands",
-        "source": "S",
+        "source": [
+          "S"
+        ],
         "target": [
           "SRC-CI95_B02"
         ]
@@ -1599,7 +1601,9 @@
           "from_node": "apply8"
         },
         "dimension": "bands",
-        "source": "R",
+        "source": [
+          "R"
+        ],
         "target": [
           "SRC-CI95_B03"
         ]
@@ -1727,7 +1731,9 @@
           "from_node": "apply10"
         },
         "dimension": "bands",
-        "source": "C",
+        "source": [
+          "C"
+        ],
         "target": [
           "SRC-CI95_B04"
         ]
@@ -1855,7 +1861,9 @@
           "from_node": "apply12"
         },
         "dimension": "bands",
-        "source": "-",
+        "source": [
+          "-"
+        ],
         "target": [
           "SRC-CI95_B05"
         ]
@@ -1983,7 +1991,9 @@
           "from_node": "apply14"
         },
         "dimension": "bands",
-        "source": "S",
+        "source": [
+          "S"
+        ],
         "target": [
           "SRC-CI95_B06"
         ]
@@ -2111,7 +2121,9 @@
           "from_node": "apply16"
         },
         "dimension": "bands",
-        "source": "T",
+        "source": [
+          "T"
+        ],
         "target": [
           "SRC-CI95_B07"
         ]
@@ -2239,7 +2251,9 @@
           "from_node": "apply18"
         },
         "dimension": "bands",
-        "source": "D",
+        "source": [
+          "D"
+        ],
         "target": [
           "SRC-CI95_B08"
         ]
@@ -2367,7 +2381,9 @@
           "from_node": "apply20"
         },
         "dimension": "bands",
-        "source": "_",
+        "source": [
+          "_"
+        ],
         "target": [
           "SRC-CI95_B8A"
         ]
@@ -2495,7 +2511,9 @@
           "from_node": "apply22"
         },
         "dimension": "bands",
-        "source": "B",
+        "source": [
+          "B"
+        ],
         "target": [
           "SRC-CI95_B11"
         ]
@@ -2623,7 +2641,9 @@
           "from_node": "apply24"
         },
         "dimension": "bands",
-        "source": "1",
+        "source": [
+          "1"
+        ],
         "target": [
           "SRC-CI95_B12"
         ]
