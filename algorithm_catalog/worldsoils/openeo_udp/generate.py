@@ -79,7 +79,7 @@ def nmad(cube: openeo.DataCube, nmad_sigma: float|Parameter, min_offset=80.0) ->
     is_outlier = b02.apply_dimension(dimension="t", process=_nmad)
     return cube.mask(is_outlier)
 
-def ci95(sd: openeo.DataCube, n: openeo.DataCube) -> openeo.DataCube:
+def _ci95(sd: openeo.DataCube, n: openeo.DataCube) -> openeo.DataCube:
     """ Compute 95% confidence interval according to 
     +- 1.96 * (sd / sqrt(n))
     """
@@ -232,8 +232,7 @@ def composite(con: Connection,
     sfreq_count = sfreq_count.add_dimension(name="bands", label=RES_BANDS["SFREQ-COUNT"], type="bands")
     # sfreq_count.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-COUNT"], source=S2_BANDS[0])
 
-    src_ci  = ci95(src_std, sfreq_count).rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=RES_BANDS["SRC-STD"])
-    
+    src_ci = _ci95(src_std.filter_bands(RES_BANDS["SRC-STD"]), sfreq_count).rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=RES_BANDS["SRC-STD"])
     
 
     combined_output = src.merge_cubes(src_std)
@@ -243,7 +242,7 @@ def composite(con: Connection,
     combined_output = combined_output.merge_cubes(sfreq_valid)
     combined_output = combined_output.merge_cubes(sfreq_count)
     sfreq_freq = combined_output.band(RES_BANDS["SFREQ-COUNT"]) / combined_output.band(RES_BANDS["SFREQ-VALID"])
-    sfreq_freq = sfreq_freq.add_dimension(name="bands", label=["xx"], type="bands")
+    sfreq_freq = sfreq_freq.add_dimension(name="bands", label=RES_BANDS["SFREQ-FREQ"], type="bands")
     # sfreq_freq = sfreq_freq.rename_labels(dimension="bands", target=["xx"], source=[RES_BANDS["SFREQ-COUNT"]])
     
     combined_output = combined_output.merge_cubes(sfreq_freq)
