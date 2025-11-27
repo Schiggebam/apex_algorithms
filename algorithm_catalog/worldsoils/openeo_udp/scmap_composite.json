@@ -1546,7 +1546,9 @@
           "from_node": "adddimension5"
         },
         "dimension": "bands",
-        "target": "BareSoilFrequency"
+        "target": [
+          "BareSoilFrequency"
+        ]
       }
     },
     "mergecubes11": {
