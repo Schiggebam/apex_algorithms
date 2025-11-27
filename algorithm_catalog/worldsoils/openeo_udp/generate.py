@@ -96,7 +96,7 @@ def _ci95(combined_cube: openeo.DataCube, sd_bands: List[str], n: str) -> openeo
     for i in range(1, len(cubes)):
         cubes[0] = cubes[0].merge_cubes(cubes[i])
     
-    cubes[0].rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=sd_bands)
+    cubes[0] = cubes[0].rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=sd_bands)
     return cubes[0]
 
 
