@@ -1059,26 +1059,6 @@
         }
       }
     },
-    "filterbands2": {
-      "process_id": "filter_bands",
-      "arguments": {
-        "bands": [
-          "SRC-STD_B02",
-          "SRC-STD_B03",
-          "SRC-STD_B04",
-          "SRC-STD_B05",
-          "SRC-STD_B06",
-          "SRC-STD_B07",
-          "SRC-STD_B08",
-          "SRC-STD_B8A",
-          "SRC-STD_B11",
-          "SRC-STD_B12"
-        ],
-        "data": {
-          "from_node": "renamelabels2"
-        }
-      }
-    },
     "reducedimension10": {
       "process_id": "reduce_dimension",
       "arguments": {
@@ -1163,7 +1143,7 @@
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "filterbands2"
+          "from_node": "renamelabels2"
         },
         "cube2": {
           "from_node": "apply5"
@@ -1208,11 +1188,31 @@
         }
       }
     },
+    "filterbands2": {
+      "process_id": "filter_bands",
+      "arguments": {
+        "bands": [
+          "SRC-STD_B02",
+          "SRC-STD_B03",
+          "SRC-STD_B04",
+          "SRC-STD_B05",
+          "SRC-STD_B06",
+          "SRC-STD_B07",
+          "SRC-STD_B08",
+          "SRC-STD_B8A",
+          "SRC-STD_B11",
+          "SRC-STD_B12"
+        ],
+        "data": {
+          "from_node": "apply6"
+        }
+      }
+    },
     "renamelabels3": {
       "process_id": "rename_labels",
       "arguments": {
         "data": {
-          "from_node": "apply6"
+          "from_node": "filterbands2"
         },
         "dimension": "bands",
         "source": [
@@ -1520,7 +1520,7 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 32
+                "index": 53
               }
             },
             "arrayelement11": {
@@ -1529,7 +1529,7 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 53
+                "index": 52
               }
             },
             "divide4": {

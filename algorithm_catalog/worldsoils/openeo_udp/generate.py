@@ -232,8 +232,8 @@ def composite(con: Connection,
     sfreq_count = sfreq_count.add_dimension(name="bands", label=RES_BANDS["SFREQ-COUNT"], type="bands")
     # sfreq_count.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-COUNT"], source=S2_BANDS[0])
 
-    src_ci = _ci95(src_std.filter_bands(RES_BANDS["SRC-STD"]), sfreq_count).rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=RES_BANDS["SRC-STD"])
-    
+    src_ci = _ci95(src_std, sfreq_count).filter_bands(RES_BANDS["SRC-STD"])
+    src_ci = src_ci.rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=RES_BANDS["SRC-STD"])
 
     combined_output = src.merge_cubes(src_std)
     combined_output = combined_output.merge_cubes(src_ci)
