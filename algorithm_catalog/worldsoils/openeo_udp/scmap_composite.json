@@ -1375,15 +1375,6 @@
       "process_id": "filter_bands",
       "arguments": {
         "bands": [
-          "SRC-STD_B02",
-          "SRC-STD_B03",
-          "SRC-STD_B04",
-          "SRC-STD_B05",
-          "SRC-STD_B06",
-          "SRC-STD_B07",
-          "SRC-STD_B08",
-          "SRC-STD_B8A",
-          "SRC-STD_B11",
           "SRC-STD_B12"
         ],
         "data": {

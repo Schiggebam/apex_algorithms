@@ -84,26 +84,15 @@ def _ci95(combined_cube: openeo.DataCube, sd_bands: List[str], n: str) -> openeo
     +- 1.96 * (sd / sqrt(n))
     """
     z = 1.96
-    sd_cube = combined_cube.filter_bands(sd_bands)
-    n_sqrt = combined_cube.band(n).apply("sqrt")
-    ci = sd_cube.divide(n_sqrt)
-    ci = ci * z
-    ci = ci.rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"])
+    for b in sd_bands:
+        sd_cube = combined_cube.filter_bands(b)
+        n_sqrt = combined_cube.band(n).apply("sqrt")
+        ci = sd_cube.divide(n_sqrt)
+        ci = ci * z
+        ci = ci.rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"])
+        combined_cube.merge_cubes(ci)
     return combined_cube.merge_cubes(ci)
 
-
-    # z = 1.96
-    # n_sqrt = cube.band(n).apply(process=sqrt_)
-    # ci_bands = []
-    # for bi, b in enumerate(sd_bands):
-    #     sd = cube.band(b)
-    #     ci = sd / n_sqrt
-    #     ci = ci.rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"][bi])
-    #     cube = cube.merge_cubes(ci)
-# 
-    # # for ci in ci_bands:
-    # #     cube = cube.merge_cubes(ci)
-    # return cube
 
 def composite(con: Connection,
               temporal_extent: List[str]|Parameter,
