@@ -85,14 +85,14 @@ def _ci95(combined_cube: openeo.DataCube, sd_bands: List[str], n: str) -> openeo
     """
     z = 1.96
     cubes = []
-    for b in sd_bands:
+    for bi, b in enumerate(sd_bands):
         sd_cube = combined_cube.filter_bands(b)
         n_sqrt = combined_cube.band(n).apply("sqrt")
         ci = sd_cube.divide(n_sqrt)
         ci = ci * z
-        ci = ci.rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"])
+        ci = ci.rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"][bi])
         cubes.append(ci)
-        # combined_cube.merge_cubes(ci)
+        
     for i in range(1, len(cubes)):
         cubes[0] = cubes[0].merge_cubes(cubes[i])
     

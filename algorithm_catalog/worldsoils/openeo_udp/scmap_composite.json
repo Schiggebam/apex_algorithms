@@ -1482,18 +1482,7 @@
           "from_node": "apply6"
         },
         "dimension": "bands",
-        "target": [
-          "SRC-CI95_B02",
-          "SRC-CI95_B03",
-          "SRC-CI95_B04",
-          "SRC-CI95_B05",
-          "SRC-CI95_B06",
-          "SRC-CI95_B07",
-          "SRC-CI95_B08",
-          "SRC-CI95_B8A",
-          "SRC-CI95_B11",
-          "SRC-CI95_B12"
-        ]
+        "target": "SRC-CI95_B02"
       }
     },
     "filterbands5": {
@@ -1607,18 +1596,7 @@
           "from_node": "apply8"
         },
         "dimension": "bands",
-        "target": [
-          "SRC-CI95_B02",
-          "SRC-CI95_B03",
-          "SRC-CI95_B04",
-          "SRC-CI95_B05",
-          "SRC-CI95_B06",
-          "SRC-CI95_B07",
-          "SRC-CI95_B08",
-          "SRC-CI95_B8A",
-          "SRC-CI95_B11",
-          "SRC-CI95_B12"
-        ]
+        "target": "SRC-CI95_B03"
       }
     },
     "mergecubes11": {
@@ -1743,18 +1721,7 @@
           "from_node": "apply10"
         },
         "dimension": "bands",
-        "target": [
-          "SRC-CI95_B02",
-          "SRC-CI95_B03",
-          "SRC-CI95_B04",
-          "SRC-CI95_B05",
-          "SRC-CI95_B06",
-          "SRC-CI95_B07",
-          "SRC-CI95_B08",
-          "SRC-CI95_B8A",
-          "SRC-CI95_B11",
-          "SRC-CI95_B12"
-        ]
+        "target": "SRC-CI95_B04"
       }
     },
     "mergecubes13": {
@@ -1879,18 +1846,7 @@
           "from_node": "apply12"
         },
         "dimension": "bands",
-        "target": [
-          "SRC-CI95_B02",
-          "SRC-CI95_B03",
-          "SRC-CI95_B04",
-          "SRC-CI95_B05",
-          "SRC-CI95_B06",
-          "SRC-CI95_B07",
-          "SRC-CI95_B08",
-          "SRC-CI95_B8A",
-          "SRC-CI95_B11",
-          "SRC-CI95_B12"
-        ]
+        "target": "SRC-CI95_B05"
       }
     },
     "mergecubes15": {
@@ -2015,18 +1971,7 @@
           "from_node": "apply14"
         },
         "dimension": "bands",
-        "target": [
-          "SRC-CI95_B02",
-          "SRC-CI95_B03",
-          "SRC-CI95_B04",
-          "SRC-CI95_B05",
-          "SRC-CI95_B06",
-          "SRC-CI95_B07",
-          "SRC-CI95_B08",
-          "SRC-CI95_B8A",
-          "SRC-CI95_B11",
-          "SRC-CI95_B12"
-        ]
+        "target": "SRC-CI95_B06"
       }
     },
     "mergecubes17": {
@@ -2151,18 +2096,7 @@
           "from_node": "apply16"
         },
         "dimension": "bands",
-        "target": [
-          "SRC-CI95_B02",
-          "SRC-CI95_B03",
-          "SRC-CI95_B04",
-          "SRC-CI95_B05",
-          "SRC-CI95_B06",
-          "SRC-CI95_B07",
-          "SRC-CI95_B08",
-          "SRC-CI95_B8A",
-          "SRC-CI95_B11",
-          "SRC-CI95_B12"
-        ]
+        "target": "SRC-CI95_B07"
       }
     },
     "mergecubes19": {
@@ -2287,18 +2221,7 @@
           "from_node": "apply18"
         },
         "dimension": "bands",
-        "target": [
-          "SRC-CI95_B02",
-          "SRC-CI95_B03",
-          "SRC-CI95_B04",
-          "SRC-CI95_B05",
-          "SRC-CI95_B06",
-          "SRC-CI95_B07",
-          "SRC-CI95_B08",
-          "SRC-CI95_B8A",
-          "SRC-CI95_B11",
-          "SRC-CI95_B12"
-        ]
+        "target": "SRC-CI95_B08"
       }
     },
     "mergecubes21": {
@@ -2423,18 +2346,7 @@
           "from_node": "apply20"
         },
         "dimension": "bands",
-        "target": [
-          "SRC-CI95_B02",
-          "SRC-CI95_B03",
-          "SRC-CI95_B04",
-          "SRC-CI95_B05",
-          "SRC-CI95_B06",
-          "SRC-CI95_B07",
-          "SRC-CI95_B08",
-          "SRC-CI95_B8A",
-          "SRC-CI95_B11",
-          "SRC-CI95_B12"
-        ]
+        "target": "SRC-CI95_B8A"
       }
     },
     "mergecubes23": {
@@ -2559,18 +2471,7 @@
           "from_node": "apply22"
         },
         "dimension": "bands",
-        "target": [
-          "SRC-CI95_B02",
-          "SRC-CI95_B03",
-          "SRC-CI95_B04",
-          "SRC-CI95_B05",
-          "SRC-CI95_B06",
-          "SRC-CI95_B07",
-          "SRC-CI95_B08",
-          "SRC-CI95_B8A",
-          "SRC-CI95_B11",
-          "SRC-CI95_B12"
-        ]
+        "target": "SRC-CI95_B11"
       }
     },
     "mergecubes25": {
@@ -2695,18 +2596,7 @@
           "from_node": "apply24"
         },
         "dimension": "bands",
-        "target": [
-          "SRC-CI95_B02",
-          "SRC-CI95_B03",
-          "SRC-CI95_B04",
-          "SRC-CI95_B05",
-          "SRC-CI95_B06",
-          "SRC-CI95_B07",
-          "SRC-CI95_B08",
-          "SRC-CI95_B8A",
-          "SRC-CI95_B11",
-          "SRC-CI95_B12"
-        ]
+        "target": "SRC-CI95_B12"
       }
     },
     "mergecubes27": {
