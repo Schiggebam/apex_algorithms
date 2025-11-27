@@ -5,6 +5,7 @@ from pathlib import Path
 import openeo
 from openeo.api.process import Parameter
 from openeo.processes import array_create, and_
+from openeo.processes import sqrt as sqrt_
 from openeo.rest.udp import build_process_dict
 from openeo.rest.connection import Connection
 
@@ -24,6 +25,7 @@ RES_BANDS = {
     "SRC-STD": [f"SRC-STD_{b}" for b in S2_BANDS],
     "MREF": [f"MREF_{b}" for b in S2_BANDS],
     "MREF-STD": [f"MREF-STD_{b}" for b in S2_BANDS],
+    "SRC-CI": [f"SRC-CI95_{b}" for b in S2_BANDS],
     "SFREQ-VALID": "ValidPixels",
     "SFREQ-COUNT": "BareSoilPixelsCount",
     "SFREQ-FREQ": "BareSoilFrequency"
@@ -76,6 +78,14 @@ def nmad(cube: openeo.DataCube, nmad_sigma: float|Parameter, min_offset=80.0) ->
     b02 = cube.band("B02")
     is_outlier = b02.apply_dimension(dimension="t", process=_nmad)
     return cube.mask(is_outlier)
+
+def ci95(sd: openeo.DataCube, n: openeo.DataCube) -> openeo.DataCube:
+    """ Compute 95% confidence interval according to 
+    +- 1.96 * (sd / sqrt(n))
+    """
+    z = 1.96 
+    n_sqrt = n.apply(process=sqrt_)
+    return z * (sd / n_sqrt)
 
 def composite(con: Connection,
               temporal_extent: List[str]|Parameter,
@@ -217,10 +227,15 @@ def composite(con: Connection,
     src = src.rename_labels(dimension="bands", target=RES_BANDS["SRC"], source=S2_BANDS)
     src_std = src_std.rename_labels(dimension="bands", target=RES_BANDS["SRC-STD"], source=S2_BANDS)
 
+
     sfreq_count = s2_masked.band(S2_BANDS[0]).reduce_dimension(dimension="t", reducer="count").add_dimension(name="bands", label=RES_BANDS["SFREQ-COUNT"], type="bands")
+    
+    src_ci  = ci95(src_std, sfreq_count).rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=RES_BANDS["SRC-STD"])
+    
     # sfreq_count.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-COUNT"], source=S2_BANDS[0])
 
     combined_output = src.merge_cubes(src_std)
+    combined_output = combined_output.merge_cubes(src_ci)
     combined_output = combined_output.merge_cubes(mref)
     combined_output = combined_output.merge_cubes(mref_std)
     combined_output = combined_output.merge_cubes(sfreq_valid)

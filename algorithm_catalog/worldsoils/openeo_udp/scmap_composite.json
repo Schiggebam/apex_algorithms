@@ -1063,6 +1063,179 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
+          "from_node": "mask5"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement8": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "reducedimension11": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension10"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "count1": {
+              "process_id": "count",
+              "arguments": {
+                "context": {
+                  "from_parameter": "context"
+                },
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension3": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension11"
+        },
+        "label": "BareSoilPixelsCount",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "apply5": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "adddimension3"
+        },
+        "process": {
+          "process_graph": {
+            "sqrt1": {
+              "process_id": "sqrt",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mergecubes5": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "renamelabels2"
+        },
+        "cube2": {
+          "from_node": "apply5"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "divide3": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "y"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply6": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "mergecubes5"
+        },
+        "process": {
+          "process_graph": {
+            "multiply3": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1.96,
+                "y": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "renamelabels3": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "apply6"
+        },
+        "dimension": "bands",
+        "source": [
+          "SRC-STD_B02",
+          "SRC-STD_B03",
+          "SRC-STD_B04",
+          "SRC-STD_B05",
+          "SRC-STD_B06",
+          "SRC-STD_B07",
+          "SRC-STD_B08",
+          "SRC-STD_B8A",
+          "SRC-STD_B11",
+          "SRC-STD_B12"
+        ],
+        "target": [
+          "SRC-CI95_B02",
+          "SRC-CI95_B03",
+          "SRC-CI95_B04",
+          "SRC-CI95_B05",
+          "SRC-CI95_B06",
+          "SRC-CI95_B07",
+          "SRC-CI95_B08",
+          "SRC-CI95_B8A",
+          "SRC-CI95_B11",
+          "SRC-CI95_B12"
+        ]
+      }
+    },
+    "mergecubes6": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes4"
+        },
+        "cube2": {
+          "from_node": "renamelabels3"
+        }
+      }
+    },
+    "reducedimension12": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
           "from_node": "mask2"
         },
         "dimension": "t",
@@ -1097,11 +1270,11 @@
           "B12"
         ],
         "data": {
-          "from_node": "reducedimension10"
+          "from_node": "reducedimension12"
         }
       }
     },
-    "renamelabels3": {
+    "renamelabels4": {
       "process_id": "rename_labels",
       "arguments": {
         "data": {
@@ -1134,18 +1307,18 @@
         ]
       }
     },
-    "mergecubes5": {
+    "mergecubes7": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "mergecubes4"
+          "from_node": "mergecubes6"
         },
         "cube2": {
-          "from_node": "renamelabels3"
+          "from_node": "renamelabels4"
         }
       }
     },
-    "reducedimension11": {
+    "reducedimension13": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -1183,11 +1356,11 @@
           "B12"
         ],
         "data": {
-          "from_node": "reducedimension11"
+          "from_node": "reducedimension13"
         }
       }
     },
-    "renamelabels4": {
+    "renamelabels5": {
       "process_id": "rename_labels",
       "arguments": {
         "data": {
@@ -1220,84 +1393,14 @@
         ]
       }
     },
-    "mergecubes6": {
+    "mergecubes8": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "mergecubes5"
+          "from_node": "mergecubes7"
         },
         "cube2": {
-          "from_node": "renamelabels4"
-        }
-      }
-    },
-    "reducedimension12": {
-      "process_id": "reduce_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "mask1"
-        },
-        "dimension": "bands",
-        "reducer": {
-          "process_graph": {
-            "arrayelement8": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 0
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
-    "reducedimension13": {
-      "process_id": "reduce_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "reducedimension12"
-        },
-        "dimension": "t",
-        "reducer": {
-          "process_graph": {
-            "count1": {
-              "process_id": "count",
-              "arguments": {
-                "context": {
-                  "from_parameter": "context"
-                },
-                "data": {
-                  "from_parameter": "data"
-                }
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
-    "adddimension3": {
-      "process_id": "add_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "reducedimension13"
-        },
-        "label": "ValidPixels",
-        "name": "bands",
-        "type": "bands"
-      }
-    },
-    "mergecubes7": {
-      "process_id": "merge_cubes",
-      "arguments": {
-        "cube1": {
-          "from_node": "mergecubes6"
-        },
-        "cube2": {
-          "from_node": "adddimension3"
+          "from_node": "renamelabels5"
         }
       }
     },
@@ -1305,7 +1408,7 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mask5"
+          "from_node": "mask1"
         },
         "dimension": "bands",
         "reducer": {
@@ -1355,19 +1458,30 @@
         "data": {
           "from_node": "reducedimension15"
         },
-        "label": "BareSoilPixelsCount",
+        "label": "ValidPixels",
         "name": "bands",
         "type": "bands"
       }
     },
-    "mergecubes8": {
+    "mergecubes9": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "mergecubes7"
+          "from_node": "mergecubes8"
         },
         "cube2": {
           "from_node": "adddimension4"
+        }
+      }
+    },
+    "mergecubes10": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes9"
+        },
+        "cube2": {
+          "from_node": "adddimension3"
         }
       }
     },
@@ -1375,7 +1489,7 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mergecubes8"
+          "from_node": "mergecubes10"
         },
         "dimension": "bands",
         "reducer": {
@@ -1386,7 +1500,7 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 43
+                "index": 32
               }
             },
             "arrayelement11": {
@@ -1395,10 +1509,10 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 42
+                "index": 53
               }
             },
-            "divide3": {
+            "divide4": {
               "process_id": "divide",
               "arguments": {
                 "x": {
@@ -1425,11 +1539,11 @@
         "type": "bands"
       }
     },
-    "mergecubes9": {
+    "mergecubes11": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "mergecubes8"
+          "from_node": "mergecubes10"
         },
         "cube2": {
           "from_node": "adddimension5"
