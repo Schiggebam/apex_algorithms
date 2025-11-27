@@ -242,7 +242,7 @@ def composite(con: Connection,
     combined_output = combined_output.merge_cubes(sfreq_count)
     sfreq_freq = combined_output.band(RES_BANDS["SFREQ-COUNT"]) / combined_output.band(RES_BANDS["SFREQ-VALID"])
     sfreq_freq = sfreq_freq.add_dimension(name="bands", label=RES_BANDS["SFREQ-FREQ"], type="bands")
-    # sfreq_freq.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-FREQ"])
+    sfreq_freq.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-FREQ"])
     combined_output = combined_output.merge_cubes(sfreq_freq)
 
     # s2_cube = s2_cube.apply(process=udf_process)
