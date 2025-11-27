@@ -1475,21 +1475,6 @@
         }
       }
     },
-    "renamelabels5": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "apply6"
-        },
-        "dimension": "bands",
-        "source": [
-          "S"
-        ],
-        "target": [
-          "SRC-CI95_B02"
-        ]
-      }
-    },
     "filterbands5": {
       "process_id": "filter_bands",
       "arguments": {
@@ -1594,29 +1579,14 @@
         }
       }
     },
-    "renamelabels6": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "apply8"
-        },
-        "dimension": "bands",
-        "source": [
-          "R"
-        ],
-        "target": [
-          "SRC-CI95_B03"
-        ]
-      }
-    },
     "mergecubes11": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "renamelabels5"
+          "from_node": "apply6"
         },
         "cube2": {
-          "from_node": "renamelabels6"
+          "from_node": "apply8"
         }
       }
     },
@@ -1724,21 +1694,6 @@
         }
       }
     },
-    "renamelabels7": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "apply10"
-        },
-        "dimension": "bands",
-        "source": [
-          "C"
-        ],
-        "target": [
-          "SRC-CI95_B04"
-        ]
-      }
-    },
     "mergecubes13": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -1746,7 +1701,7 @@
           "from_node": "mergecubes11"
         },
         "cube2": {
-          "from_node": "renamelabels7"
+          "from_node": "apply10"
         }
       }
     },
@@ -1854,21 +1809,6 @@
         }
       }
     },
-    "renamelabels8": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "apply12"
-        },
-        "dimension": "bands",
-        "source": [
-          "-"
-        ],
-        "target": [
-          "SRC-CI95_B05"
-        ]
-      }
-    },
     "mergecubes15": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -1876,7 +1816,7 @@
           "from_node": "mergecubes13"
         },
         "cube2": {
-          "from_node": "renamelabels8"
+          "from_node": "apply12"
         }
       }
     },
@@ -1984,21 +1924,6 @@
         }
       }
     },
-    "renamelabels9": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "apply14"
-        },
-        "dimension": "bands",
-        "source": [
-          "S"
-        ],
-        "target": [
-          "SRC-CI95_B06"
-        ]
-      }
-    },
     "mergecubes17": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -2006,7 +1931,7 @@
           "from_node": "mergecubes15"
         },
         "cube2": {
-          "from_node": "renamelabels9"
+          "from_node": "apply14"
         }
       }
     },
@@ -2114,21 +2039,6 @@
         }
       }
     },
-    "renamelabels10": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "apply16"
-        },
-        "dimension": "bands",
-        "source": [
-          "T"
-        ],
-        "target": [
-          "SRC-CI95_B07"
-        ]
-      }
-    },
     "mergecubes19": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -2136,7 +2046,7 @@
           "from_node": "mergecubes17"
         },
         "cube2": {
-          "from_node": "renamelabels10"
+          "from_node": "apply16"
         }
       }
     },
@@ -2244,21 +2154,6 @@
         }
       }
     },
-    "renamelabels11": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "apply18"
-        },
-        "dimension": "bands",
-        "source": [
-          "D"
-        ],
-        "target": [
-          "SRC-CI95_B08"
-        ]
-      }
-    },
     "mergecubes21": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -2266,7 +2161,7 @@
           "from_node": "mergecubes19"
         },
         "cube2": {
-          "from_node": "renamelabels11"
+          "from_node": "apply18"
         }
       }
     },
@@ -2374,21 +2269,6 @@
         }
       }
     },
-    "renamelabels12": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "apply20"
-        },
-        "dimension": "bands",
-        "source": [
-          "_"
-        ],
-        "target": [
-          "SRC-CI95_B8A"
-        ]
-      }
-    },
     "mergecubes23": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -2396,7 +2276,7 @@
           "from_node": "mergecubes21"
         },
         "cube2": {
-          "from_node": "renamelabels12"
+          "from_node": "apply20"
         }
       }
     },
@@ -2504,21 +2384,6 @@
         }
       }
     },
-    "renamelabels13": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "apply22"
-        },
-        "dimension": "bands",
-        "source": [
-          "B"
-        ],
-        "target": [
-          "SRC-CI95_B11"
-        ]
-      }
-    },
     "mergecubes25": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -2526,7 +2391,7 @@
           "from_node": "mergecubes23"
         },
         "cube2": {
-          "from_node": "renamelabels13"
+          "from_node": "apply22"
         }
       }
     },
@@ -2634,21 +2499,6 @@
         }
       }
     },
-    "renamelabels14": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "apply24"
-        },
-        "dimension": "bands",
-        "source": [
-          "1"
-        ],
-        "target": [
-          "SRC-CI95_B12"
-        ]
-      }
-    },
     "mergecubes27": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -2656,7 +2506,7 @@
           "from_node": "mergecubes25"
         },
         "cube2": {
-          "from_node": "renamelabels14"
+          "from_node": "apply24"
         }
       }
     },
