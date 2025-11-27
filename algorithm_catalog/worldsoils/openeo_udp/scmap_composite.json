@@ -1534,21 +1534,11 @@
         "data": {
           "from_node": "reducedimension16"
         },
-        "label": "BareSoilFrequency",
+        "label": [
+          "xx"
+        ],
         "name": "bands",
         "type": "bands"
-      }
-    },
-    "renamelabels6": {
-      "process_id": "rename_labels",
-      "arguments": {
-        "data": {
-          "from_node": "adddimension5"
-        },
-        "dimension": "bands",
-        "target": [
-          "BareSoilFrequency"
-        ]
       }
     },
     "mergecubes11": {
@@ -1558,7 +1548,7 @@
           "from_node": "mergecubes10"
         },
         "cube2": {
-          "from_node": "renamelabels6"
+          "from_node": "adddimension5"
         }
       },
       "result": true
