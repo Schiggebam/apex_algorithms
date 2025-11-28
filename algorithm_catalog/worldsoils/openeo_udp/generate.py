@@ -85,19 +85,27 @@ def _ci95(combined_cube: openeo.DataCube, sd_bands: List[str], n: str) -> openeo
     """
     z = 1.96
     cubes = []
-    for bi, b in enumerate(sd_bands):
-        sd_cube = combined_cube.filter_bands(b)
-        n_sqrt = combined_cube.band(n).apply("sqrt")
-        ci = sd_cube.divide(n_sqrt)
-        ci = ci * z
-        # ci = ci.rename_labels(dimension="bands", target=[RES_BANDS["SRC-CI"][bi]], source=[b[bi]])
-        cubes.append(ci)
-        
-    for i in range(1, len(cubes)):
-        cubes[0] = cubes[0].merge_cubes(cubes[i])
-    
-    cubes[0] = cubes[0].rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=sd_bands)
-    return cubes[0]
+
+    sd_cube = combined_cube.filter_bands(sd_bands)
+    n_sqrt = combined_cube.band(n).apply("sqrt")
+    ci = sd_cube.divide(n_sqrt)
+    ci = ci * z
+    ci.rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=sd_bands)
+    return ci
+
+    # for b in sd_bands:
+    #     sd_cube = combined_cube.filter_bands(b)
+    #     n_sqrt = combined_cube.band(n).apply("sqrt")
+    #     ci = sd_cube.divide(n_sqrt)
+    #     ci = ci * z
+    #     # ci = ci.rename_labels(dimension="bands", target=[RES_BANDS["SRC-CI"][bi]], source=[b[bi]])
+    #     cubes.append(ci)
+    #     
+    # for i in range(1, len(cubes)):
+    #     cubes[0] = cubes[0].merge_cubes(cubes[i])
+    # 
+    # cubes[0] = cubes[0].rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=sd_bands)
+    # return cubes[0]
 
 
 def composite(con: Connection,
@@ -313,6 +321,14 @@ def generate() -> dict:
         nmad_sigma=nmad_sigma, 
         # max_sun_zenith_angle=max_sun_zenith_angle
     )
+
+    # req_products = Parameter.array(
+    #     name="bands",
+    #     description=d_descriptions['products'],
+    #     item_schema=PRODUCTS_SCHEMA,
+    #     default=["SRC", "SRC-STD", "MREF", "MREF-STD", "SFREQ"],
+    #     optional=True,
+    # )
 
     schema = {
         "description": "Bare surface composite with statistical producs",
