@@ -1,7 +1,16 @@
 # SCMaP OpenEO User defined process
 This algorithm is used to build bare surface mean composites, by averaging all bare surface observations over a specfic range in time.
 
-For a detailed description about the algorithm, please refer to the [Documentation](https://download.geoservice.dlr.de/SOILSUITE/files/EUROPE_5Y/000_Data_Overview/SoilSuite_Data_Description_Europe_V1.pdf) of SoilSuite, or to any of the papers linked below.
+For the specified area of interest and time, the following steps are executed:
+1. Sentinel-2 scenes (bands B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12) with cloud cover below the max_cloud_cover threshold are loaded.
+2. Pixels with sun-zenith angles exceeding the specified threshold (default: 70°) are discarded.
+3. Clouds and other invalid pixels are removed based on the Scene Classification Layer (SCL).
+4. NDVI and NBR indices are computed and compared, on a per-pixel basis, to a pre-computed threshold image; pixels falling below the threshold are classified as bare surface
+5. esidual clouds and haze are removed using a Median Absolute Deviation (MAD) outlier detection applied to the B02 band.
+6. For pixels with at least three valid bare-surface observations over time, the temporal mean reflectance is calculated to produce the Soil Reflectance Composite (SRC).
+7. Urban areas and permanent water bodies are subsequently masked using the WorldCover dataset.
+
+For a more detailed description of the algorithm and its by-products, please refer to the [Documentation](https://download.geoservice.dlr.de/SOILSUITE/files/EUROPE_5Y/000_Data_Overview/SoilSuite_Data_Description_Europe_V1.pdf) of SoilSuite, or to any of the papers linked below.
 
 
 ## Usage
@@ -28,12 +37,12 @@ EOC Geoservice (Host) DLR/EOC
 
 
 ## Acknowledgments / Funding
-- European Space Agency
+- European Space Agency ESA WORLDSOILS project (Contract No. 400131273/20/I-703 NB) 
 
 
 # Known limitations
+The bare surface reflectance quality and availability is lower for areas with spectral mixtures, such as small fields, orchards and agroforestry areas.
+Generally, 
 Requires threshold image that is loaded *from_stac*. It is currently available for the European continent.
 
 
-# Known artifacts
-None
