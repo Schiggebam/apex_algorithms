@@ -15,7 +15,7 @@ Plese refer to the APEx Documentation [Documentation](https://esa-apex.github.io
 
 
 ## License
-[CC-BY-4.0](https://spdx.org/licenses/CC-BY-4.0)
+CC-BY-NC
 
 ## Authors / Contact
 - Uta Heiden (Producer, Processor) DLR/EOC Imaging Spectroscopy
@@ -32,8 +32,7 @@ EOC Geoservice (Host) DLR/EOC
 
 
 # Known limitations
-
-tbd
+Requires threshold image that is loaded *from_stac*. It is currently available for the European continent.
 
 
 # Known artifacts
