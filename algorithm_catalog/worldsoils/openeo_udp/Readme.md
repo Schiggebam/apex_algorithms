@@ -3,11 +3,10 @@ This algorithm is used to build bare surface mean composites, by averaging all b
 
 For the specified area of interest and time, Sentinel-2 scenes (bands B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12) with cloud cover below the max_cloud_cover threshold are loaded.
 Then, the following steps are executed:
-1. Sentinel-2 scenes (bands B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12) with cloud cover below the max_cloud_cover threshold are loaded.
 2. Pixels with sun-zenith angles exceeding the specified threshold (default: 70°) are discarded.
 3. Clouds and other invalid pixels are removed based on the Scene Classification Layer (SCL).
 4. NDVI and NBR indices are computed and compared, on a per-pixel basis, to a pre-computed threshold image; pixels falling below the threshold are classified as bare surface
-5. Residual clouds and haze are removed using a Median Absolute Deviation (MAD) outlier detection applied to the B02 band.
+5. Residual clouds and haze are removed using a Median Absolute Deviation (MAD) outlier detection applied to the B02 band along the temporal axis.
 6. For pixels with at least three valid bare-surface observations over time, the temporal mean reflectance is calculated to produce the Soil Reflectance Composite (SRC).
 7. Urban areas and permanent water bodies are subsequently masked using the WorldCover dataset.
 
@@ -38,12 +37,12 @@ EOC Geoservice (Host) DLR/EOC
 
 
 ## Acknowledgments / Funding
-- European Space Agency ESA WORLDSOILS project (Contract No. 400131273/20/I-703 NB) 
+The project received funding under the ESA WORLDSOILS project (Contract No. 400131273/20/I-703 NB) 
 
 
 # Known limitations
-The bare surface reflectance quality and availability is lower for areas with spectral mixtures, such as small fields, orchards and agroforestry areas.
-Generally, 
-Requires threshold image that is loaded *from_stac*. It is currently available for the European continent.
-
+- The bare surface reflectance quality and availability is lower for areas with spectral mixtures, such as small fields, orchards and agroforestry areas. 
+- The spatial resolution is limited by the B12 band of Sentinel, which is available at 20m ground sampling distance.
+- The algorihtm requires threshold image that is loaded via *from_stac(...)*. It is currently available for the European continent.
+- Generally, a temporal window of at least multiple months is recommended for stable averages
 
