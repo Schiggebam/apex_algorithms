@@ -58,7 +58,7 @@
       "formats": [
         "GeoTiff", "netCDF"
       ],
-      "license": "CC-BY-4.0"
+      "license": "CC-BY-NC"
     },
     "linkTemplates": [],
     "links": [
