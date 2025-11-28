@@ -16,7 +16,8 @@ d_description = {
     "bb": "Bounding Box",
     "cc": "Maximum allowed scene-wide cloud cover for the scene to be considered in the composite",
     "sigma": "Sigma for median absolute deviation outlier detection in Band B02, default=3.0",
-    "sza": "Maximum sun zenith angle (at pixel level) for a pixel to be considered in the composite. Default value (70.0) derived from Sen2Cor recommendation."
+    "sza": "Maximum sun zenith angle (at pixel level) for a pixel to be considered in the composite. Default value (70.0) derived from Sen2Cor recommendation.",
+    "ci": "Computes the 95-Confidence interval for each band. Will increase credit consumption"
 }
 
 S2_BANDS = "B02 B03 B04 B05 B06 B07 B08 B8A B11 B12".split()
@@ -120,7 +121,8 @@ def composite(con: Connection,
               spatial_extent: dict|Parameter,
               max_cloud_cover: int|Parameter, 
               nmad_sigma: float|Parameter, 
-              max_sun_zenith_angle: float=70) -> openeo.DataCube:
+              max_sun_zenith_angle: float=70, 
+              compute_ci: bool|Parameter=True) -> openeo.DataCube:
     """
     Generate a Bare Surface Composite (SRC) and additional derived products.
 
@@ -148,6 +150,8 @@ def composite(con: Connection,
         compositing.
     max_sun_zenith_angle : float, optional
         Upper limit for the sun zenith angle filter, by default 70 degrees.
+    compute_ci : bool, optional
+        Can be disabled if Confidence Interval is not needed. Speeds up computation
 
     Returns
     -------
@@ -271,9 +275,9 @@ def composite(con: Connection,
     combined_output = combined_output.merge_cubes(sfreq_count)
     
     # inner math
-    ci = _ci95(combined_output, RES_BANDS["SRC-STD"], RES_BANDS["SFREQ-COUNT"])   # works but slow
-    
-    combined_output = combined_output.merge_cubes(ci)
+    if compute_ci:
+        ci = _ci95(combined_output, RES_BANDS["SRC-STD"], RES_BANDS["SFREQ-COUNT"])   # works but slow
+        combined_output = combined_output.merge_cubes(ci)
     sfreq_freq = combined_output.band(RES_BANDS["SFREQ-COUNT"]) / combined_output.band(RES_BANDS["SFREQ-VALID"])
     sfreq_freq = sfreq_freq.add_dimension(name="bands", label=RES_BANDS["SFREQ-FREQ"], type="bands")
     # sfreq_freq = sfreq_freq.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-FREQ"], source=[RES_BANDS["SFREQ-COUNT"]])
@@ -321,22 +325,21 @@ def generate() -> dict:
         default=3.0
     )
 
+    compute_ci = Parameter.boolean(
+        name = "compute_ci",
+        description=d_description["ci"],
+        default=False
+    )
+
     scmap_composite = composite(
         con=con, 
         temporal_extent=temporal_extent,
         spatial_extent=spatial_extent,
         max_cloud_cover=max_scene_cloud_cover,
         nmad_sigma=nmad_sigma, 
+        compute_ci=compute_ci
         # max_sun_zenith_angle=max_sun_zenith_angle
     )
-
-    # req_products = Parameter.array(
-    #     name="bands",
-    #     description=d_descriptions['products'],
-    #     item_schema=PRODUCTS_SCHEMA,
-    #     default=["SRC", "SRC-STD", "MREF", "MREF-STD", "SFREQ"],
-    #     optional=True,
-    # )
 
     schema = {
         "description": "Bare surface composite with statistical producs",
@@ -391,7 +394,8 @@ def test_run(d_test_setup=test_setup_small, path_out=Path("./result/")):
         spatial_extent=bbox,
         max_cloud_cover=80,
         nmad_sigma=nmad_sigma,
-        max_sun_zenith_angle=max_sun_zenith_angle
+        max_sun_zenith_angle=max_sun_zenith_angle,
+        compute_ci=False
     )
 
     job = scmap_composite.create_job(title="scmap_composite")
