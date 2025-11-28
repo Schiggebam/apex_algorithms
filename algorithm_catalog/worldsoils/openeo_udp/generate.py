@@ -253,6 +253,12 @@ def composite(con: Connection,
 
     s2_masked = nmad(s2_masked, nmad_sigma)
 
+    sfreq_count = s2_masked.band(S2_BANDS[0]).reduce_dimension(dimension="t", reducer="count")
+    sfreq_count = sfreq_count.add_dimension(name="bands", label=RES_BANDS["SFREQ-COUNT"], type="bands")
+
+    cond_count = sfreq_count < 3
+    s2_masked = s2_masked.mask(cond_count)
+
     src = s2_masked.reduce_dimension(dimension="t", reducer="mean")
     src_std = s2_masked.reduce_dimension(dimension="t", reducer="sd").filter_bands(S2_BANDS)
 
@@ -260,8 +266,8 @@ def composite(con: Connection,
     src_std = src_std.rename_labels(dimension="bands", target=RES_BANDS["SRC-STD"], source=S2_BANDS)
 
 
-    sfreq_count = s2_masked.band(S2_BANDS[0]).reduce_dimension(dimension="t", reducer="count")
-    sfreq_count = sfreq_count.add_dimension(name="bands", label=RES_BANDS["SFREQ-COUNT"], type="bands")
+    
+
     # sfreq_count.rename_labels(dimension="bands", target=RES_BANDS["SFREQ-COUNT"], source=S2_BANDS[0])
 
     # src_ci = _ci95(src_std, sfreq_count).filter_bands(RES_BANDS["SRC-STD"])

@@ -36,5 +36,4 @@ Requires threshold image that is loaded *from_stac*. It is currently available f
 
 
 # Known artifacts
-
-tbd
+None
