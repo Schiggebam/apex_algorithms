@@ -1435,6 +1435,40 @@
         }
       }
     },
+    "adddimension5": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "apply5"
+        },
+        "label": "SRC-STD_B02",
+        "name": "bands"
+      }
+    },
+    "renamelabels5": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "adddimension5"
+        },
+        "dimension": "bands",
+        "source": [
+          "SRC-STD_B02"
+        ],
+        "target": [
+          "SRC-STD_B02",
+          "SRC-STD_B03",
+          "SRC-STD_B04",
+          "SRC-STD_B05",
+          "SRC-STD_B06",
+          "SRC-STD_B07",
+          "SRC-STD_B08",
+          "SRC-STD_B8A",
+          "SRC-STD_B11",
+          "SRC-STD_B12"
+        ]
+      }
+    },
     "mergecubes9": {
       "process_id": "merge_cubes",
       "arguments": {
@@ -1442,7 +1476,7 @@
           "from_node": "filterbands4"
         },
         "cube2": {
-          "from_node": "apply5"
+          "from_node": "renamelabels5"
         },
         "overlap_resolver": {
           "process_graph": {
@@ -1484,7 +1518,7 @@
         }
       }
     },
-    "renamelabels5": {
+    "renamelabels6": {
       "process_id": "rename_labels",
       "arguments": {
         "data": {
@@ -1524,7 +1558,7 @@
           "from_node": "mergecubes8"
         },
         "cube2": {
-          "from_node": "renamelabels5"
+          "from_node": "renamelabels6"
         }
       }
     },
@@ -1571,7 +1605,7 @@
         }
       }
     },
-    "adddimension5": {
+    "adddimension6": {
       "process_id": "add_dimension",
       "arguments": {
         "data": {
@@ -1589,7 +1623,7 @@
           "from_node": "mergecubes10"
         },
         "cube2": {
-          "from_node": "adddimension5"
+          "from_node": "adddimension6"
         }
       },
       "result": true
