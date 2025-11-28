@@ -79,39 +79,40 @@ def nmad(cube: openeo.DataCube, nmad_sigma: float|Parameter, min_offset=80.0) ->
     is_outlier = b02.apply_dimension(dimension="t", process=_nmad)
     return cube.mask(is_outlier)
 
+
 def _ci95(combined_cube: openeo.DataCube, sd_bands: List[str], n: str) -> openeo.DataCube:
     """ Compute 95% confidence interval according to 
     +- 1.96 * (sd / sqrt(n))
     """
     z = 1.96
     cubes = []
-
-    sd_cube = combined_cube.filter_bands(sd_bands)
     n_sqrt = combined_cube.band(n).apply("sqrt")
-    n_sqrt = n_sqrt.add_dimension(name="bands", label=sd_bands[0])
-    n_sqrt = n_sqrt.rename_labels(
-        dimension="bands",
-        source=[sd_bands[0]],
-        target=sd_bands
-    )
-    ci = sd_cube.divide(n_sqrt)
-    ci = ci * z
-    ci = ci.rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=sd_bands)
-    return ci
+    # FIXME Broadcasting to avoid loop
+    # sd_cube = combined_cube.filter_bands(sd_bands)
+    # n_sqrt = n_sqrt.add_dimension(name="bands", label=sd_bands[0])
+    # n_sqrt = n_sqrt.rename_labels(
+    #     dimension="bands",
+    #     source=[sd_bands[0]],
+    #     target=sd_bands
+    # )
+    # ci = sd_cube.divide(n_sqrt)
+    # ci = ci * z
+    # ci = ci.rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=sd_bands)
+    # return ci
 
     
-    # for b in sd_bands:
-    #     sd_cube = combined_cube.filter_bands(b)
-    #     ci = sd_cube.divide(n_sqrt)
-    #     ci = ci * z
-    #     # ci = ci.rename_labels(dimension="bands", target=[RES_BANDS["SRC-CI"][bi]], source=[b[bi]])
-    #     cubes.append(ci)
-    #     
-    # for i in range(1, len(cubes)):
-    #     cubes[0] = cubes[0].merge_cubes(cubes[i])
-    # 
-    # cubes[0] = cubes[0].rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=sd_bands)
-    # return cubes[0]
+    for b in sd_bands:
+        sd_cube = combined_cube.filter_bands(b)
+        ci = sd_cube.divide(n_sqrt)
+        ci = ci * z
+        # ci = ci.rename_labels(dimension="bands", target=[RES_BANDS["SRC-CI"][bi]], source=[b[bi]])
+        cubes.append(ci)
+        
+    for i in range(1, len(cubes)):
+        cubes[0] = cubes[0].merge_cubes(cubes[i])
+    
+    cubes[0] = cubes[0].rename_labels(dimension="bands", target=RES_BANDS["SRC-CI"], source=sd_bands)
+    return cubes[0]
 
 
 def composite(con: Connection,
@@ -270,7 +271,8 @@ def composite(con: Connection,
     combined_output = combined_output.merge_cubes(sfreq_count)
     
     # inner math
-    ci = _ci95(combined_output, RES_BANDS["SRC-STD"], RES_BANDS["SFREQ-COUNT"])
+    ci = _ci95(combined_output, RES_BANDS["SRC-STD"], RES_BANDS["SFREQ-COUNT"])   # works but slow
+    
     combined_output = combined_output.merge_cubes(ci)
     sfreq_freq = combined_output.band(RES_BANDS["SFREQ-COUNT"]) / combined_output.band(RES_BANDS["SFREQ-VALID"])
     sfreq_freq = sfreq_freq.add_dimension(name="bands", label=RES_BANDS["SFREQ-FREQ"], type="bands")
