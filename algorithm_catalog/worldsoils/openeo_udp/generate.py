@@ -367,6 +367,7 @@ def generate() -> dict:
             spatial_extent,
             max_scene_cloud_cover,
             nmad_sigma, 
+            compute_ci,
             # max_sun_zenith_angle
         ],
         returns=schema,
