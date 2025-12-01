@@ -43,5 +43,4 @@ The project received funding under the ESA WORLDSOILS project (Contract No. 4001
 - The bare surface reflectance quality and availability is lower for areas with spectral mixtures, such as small fields, orchards and agroforestry areas. 
 - The spatial resolution is limited by the B12 band of Sentinel, which is available at 20m ground sampling distance.
 - The algorihtm requires threshold image that is loaded via *from_stac(...)*. It is currently available for the European continent.
-- Generally, a temporal window of at least multiple months is recommended for stable averages
-
+- To obtain stable soil reflectance values, users should integrate observations across multiple seasons or, ideally, several years. As a reference point, SoilSuite Europe employed a five-year time range, while SoilSuite Africa used four years.
