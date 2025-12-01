@@ -3,15 +3,16 @@ This algorithm is used to build bare surface mean composites, by averaging all b
 
 For the specified area of interest and time, Sentinel-2 scenes (bands B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12) with cloud cover below the max_cloud_cover threshold are loaded.
 Then, the following steps are executed:
-2. Pixels with sun-zenith angles exceeding the specified threshold (default: 70°) are discarded.
-3. Clouds and other invalid pixels are removed based on the Scene Classification Layer (SCL).
-4. NDVI and NBR indices are computed and compared, on a per-pixel basis, to a pre-computed threshold image; pixels falling below the threshold are classified as bare surface
-5. Residual clouds and haze are removed using a Median Absolute Deviation (MAD) outlier detection applied to the B02 band along the temporal axis.
-6. For pixels with at least three valid bare-surface observations over time, the temporal mean reflectance is calculated to produce the Soil Reflectance Composite (SRC).
-7. Urban areas and permanent water bodies are subsequently masked using the WorldCover dataset.
+
+1. Pixels with sun-zenith angles exceeding the specified threshold (default: 70°) are discarded.
+2. Clouds and other invalid pixels are removed based on the Scene Classification Layer (SCL).
+3. NDVI and NBR indices are computed and compared, on a per-pixel basis, to a pre-computed threshold image; pixels falling below the threshold are classified as bare surface
+4. Residual clouds and haze are removed using a Median Absolute Deviation (MAD) outlier detection applied to the B02 band along the temporal axis.
+5. For pixels with at least three valid bare-surface observations over time, the temporal mean reflectance is calculated to produce the Soil Reflectance Composite (SRC).
+6. Urban areas and permanent water bodies are subsequently masked using the WorldCover dataset.
+
 
 For a more detailed description of the algorithm and its by-products, please refer to the [Documentation](https://download.geoservice.dlr.de/SOILSUITE/files/EUROPE_5Y/000_Data_Overview/SoilSuite_Data_Description_Europe_V1.pdf) of SoilSuite, or to any of the papers linked below.
-
 
 ## Usage
 Plese refer to the APEx Documentation [Documentation](https://esa-apex.github.io/apex_documentation/guides/udp_writer_guide.html) and the [GitHub](https://github.com/ESA-APEx/apex_algorithms)
@@ -21,7 +22,6 @@ Plese refer to the APEx Documentation [Documentation](https://esa-apex.github.io
 - Rogge, D., Bauer, A, Zeidler, J., Müller, A., Esch, T. and Heiden, U. (2018). Building an exposed soil composite processor (SCMaP) for mapping spatial and temporal characteristics of soils with Landsat imagery (1984-2014). Remote Sensing of Environment, 205, 1-17. ISSN 0034-4257 DOI: 10.3390/rs14184526
 - Heiden, U., d’Angelo, P., Schwind, P., Karlshöfer, P., Müller, R., Zepp, S., Wiesmeier, M., & Reinartz, P. (2022). Soil Reflectance Composites—Improved Thresholding and Performance Evaluation. Remote Sensing, 14(18), 4526. DOI: 10.1016/j.rse.2017.11.004
 - Karlshoefer, P., d’Angelo, P., Eberle, J., & Heiden, U. (2025). Evaluation framework for the generation of continental bare surface reflectance composites. Geoderma, 459. DOI: 10.1016/j.geoderma.2025.117340
-
 
 ## License
 CC-BY-NC
