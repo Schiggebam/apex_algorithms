@@ -15,7 +15,7 @@ Then, the following steps are executed:
 For a more detailed description of the algorithm and its by-products, please refer to the [Documentation](https://download.geoservice.dlr.de/SOILSUITE/files/EUROPE_5Y/000_Data_Overview/SoilSuite_Data_Description_Europe_V1.pdf) of SoilSuite, or to any of the papers linked below.
 
 ## Usage
-Plese refer to the APEx Documentation [Documentation](https://esa-apex.github.io/apex_documentation/guides/udp_writer_guide.html) and the [GitHub](https://github.com/ESA-APEx/apex_algorithms)
+Please refer to the APEx Documentation [Documentation](https://esa-apex.github.io/apex_documentation/guides/udp_writer_guide.html) and the [GitHub](https://github.com/ESA-APEx/apex_algorithms)
 
 ## Literature references
 [SoilSuite Europe](https://geoservice.dlr.de/web/datasets/soilsuite_eur_5y)
