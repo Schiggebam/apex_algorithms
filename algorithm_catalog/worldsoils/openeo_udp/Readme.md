@@ -1,5 +1,5 @@
 # SCMaP OpenEO User defined process
-This algorithm is used to build bare surface mean composites, by averaging all bare surface observations over a specfic range in time.
+This algorithm is used to build several spectral and statistical composite products including bare surface mean composites, by averaging all bare surface observations over a specfic range in time.
 
 For the specified area of interest and time, Sentinel-2 scenes (bands B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12) with cloud cover below the max_cloud_cover threshold are loaded.
 Then, the following steps are executed:
@@ -36,9 +36,8 @@ CC-BY-NC
 EOC Geoservice (Host) DLR/EOC
 
 
-## Acknowledgments / Funding
-The project received funding under the ESA WORLDSOILS project (Contract No. 400131273/20/I-703 NB) 
-
+## Acknowledgments / Funding 
+The project received funding under the ESA WORLDSOILS project (Contract No. 400131273/20/I-703 NB) and from the EU FPCUP project CUP4SOIL (FPA 275/G/GRO/COPE/17/10042).
 
 # Known limitations
 - The bare surface reflectance quality and availability is lower for areas with spectral mixtures, such as small fields, orchards and agroforestry areas. 
