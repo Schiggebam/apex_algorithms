@@ -1,5 +1,7 @@
 # SCMaP OpenEO User defined process
-This algorithm is used to build several spectral and statistical composite products including bare surface mean composites, by averaging all bare surface observations over a specfic range in time.
+## Introduction / Purpose
+
+DLR's Soil Composite Mapping Processor (ScMAP) generates a collection of different image data products (SoilSuite) that provide information about the spectral and statistical properties of European soils and other bare surfaces such as rocks. SCMaP utilizes the Sentinel-2 data archive and is a specialized processing chain for detecting and analyzing bare soils/surfaces on a large (continental) scale. Bare surface and soil pixels are selected using an index combining the Normalized Difference Vegetation Index (NDVI) and the Normalized Burned Ratio (NBR) that optimizes the exclusion of photosynthetically active and non-active vegetation. The index is calculated and applied for each individual pixel. The resulting products can be used for multiple purposes such as input for spectral and digital soil property mapping approaches (e.g. bare surface composites), soil erosion analyses and monitoring of agricultural practices (e.g. bare surface frequency and mask product). 
 
 For the specified area of interest and time, Sentinel-2 scenes (bands B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12) with cloud cover below the max_cloud_cover threshold are loaded.
 Then, the following steps are executed:
