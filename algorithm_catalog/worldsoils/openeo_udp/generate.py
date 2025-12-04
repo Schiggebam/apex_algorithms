@@ -302,7 +302,9 @@ def composite(con: Connection,
     # is_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
     # is_other = is_other.multiply(3)
 # 
-    is_perm_veg = mask.reduce_dimension(dimension="t", reducer="all")
+    masked = s2_merged.band("pvir2") < th
+    is_perm_veg = ~(mask.reduce_dimension(dimension="t", reducer="any"))
+    # is_perm_veg = mask.reduce_dimension(dimension="t", reducer="all")
     is_perm_veg = is_perm_veg.apply(process=openeo.processes.round)
     bspc = combined_output.band("BareSoilPixelsCount")   # (x,y) or (x,y,t)
 
@@ -313,12 +315,12 @@ def composite(con: Connection,
     mask_int = mask.apply(process=openeo.processes.round)
 
     # Add as a new band
-    mask_int_named = mask_int.add_dimension("bands", "BareSoilMask", "bands")
-    is_perm_veg_named = is_perm_veg.add_dimension("bands", "PermanentVeg", "bands")
+    # mask_int_named = mask_int.add_dimension("bands", "BareSoilMask", "bands")
+    # is_perm_veg_named = is_perm_veg.add_dimension("bands", "PermanentVeg", "bands")
 
     # Merge into existing cube
-    combined_output = combined_output.merge_cubes(mask_int_named)
-    combined_output = combined_output.merge_cubes(is_perm_veg_named)
+    # combined_output = combined_output.merge_cubes(mask_int_named)
+    # combined_output = combined_output.merge_cubes(is_perm_veg_named)
 
     combined_mask = is_perm_veg.multiply(2)
     combined_mask = combined_mask.add(mask_int)
