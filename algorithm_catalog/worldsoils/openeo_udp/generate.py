@@ -4,7 +4,7 @@ from pathlib import Path
 
 import openeo
 from openeo.api.process import Parameter
-from openeo.processes import array_create, and_, if_, inspect
+from openeo.processes import array_create, and_, if_, inspect, array_element
 from openeo.processes import sqrt as sqrt_, add, multiply, subtract
 from openeo.rest.udp import build_process_dict
 from openeo.rest.connection import Connection
@@ -302,14 +302,33 @@ def composite(con: Connection,
     is_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
     is_other = is_other.multiply(3)
 
+    mask_cube = is_soil.merge_cubes(is_perm_veg)
+    mask_cube = mask_cube.merge_cubes(is_other)
+
+    def classify_pixel(data, context=None):
+        soil     = array_element(data, 0)
+        permveg  = array_element(data, 1)
+        other    = array_element(data, 2)
+
+        return if_(
+            soil, 1,
+            if_(
+                permveg, 2,
+                if_(other, 3, 0)
+            )
+        )
+
+    out_mask = mask_cube.apply(classify_pixel)
+    out_mask = out_mask.add_dimension("bands", "MASK", "bands")
+
     # is_perm_veg = is_perm_veg
     
-    out_mask = ref.multiply(0)
-    out_mask = add(out_mask, is_soil)
-    # out_mask = add(out_mask, is_perm_veg)
-    # out_mask = add(out_mask, is_other)
-    # out_mask = out_mask.rename_labels("bands", target=["MASK"])
-    out_mask = out_mask.add_dimension(name="bands", label="MASK", type="bands")
+    # out_mask = ref.multiply(0)
+    # out_mask = add(out_mask, is_soil)
+    # # out_mask = add(out_mask, is_perm_veg)
+    # # out_mask = add(out_mask, is_other)
+    # # out_mask = out_mask.rename_labels("bands", target=["MASK"])
+    # out_mask = out_mask.add_dimension(name="bands", label="MASK", type="bands")
 
     combined_output = combined_output.merge_cubes(out_mask)
     
