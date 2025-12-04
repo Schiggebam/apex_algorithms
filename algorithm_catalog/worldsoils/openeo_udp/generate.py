@@ -297,6 +297,7 @@ def composite(con: Connection,
     is_perm_veg = is_perm_veg.apply(process=openeo.processes.not_)
     # is_perm_veg = mask.reduce_dimension(dimension="t", reducer="all")     # doesn't work because of nans
     is_perm_veg = is_perm_veg.apply(process=openeo.processes.round)
+    is_perm_veg = is_perm_veg.add(2)
     worldcover = worldcover.band("MAP")
     is_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
     
@@ -320,8 +321,16 @@ def composite(con: Connection,
     combined_output = combined_output.merge_cubes(is_other_named)
 
     # TODO (paul) add this
+    # is_perm_veg = is_perm_veg.add(2)
+    z = is_perm_veg.multiply(0)
+    z = z.mask(is_perm_veg, replacement=2)
+    z = z.mask(mask_int, replacement=1)
+    z = z.mask(is_other, replacement=3)
+    z = z.add_dimension("bands", "MASK", "bands")
+    combined_output = combined_output.merge_cubes(z)
+
     # is_other = is_other.multiply(3)
-    # combined_mask = is_perm_veg.multiply(2)
+    # combined_mask = is_perm_veg.add(2).multiply(2)
     # combined_mask = combined_mask.add(mask_int)
     # combined_mask = combined_mask.add(is_other)
     # combined_mask = combined_mask.add_dimension("bands", "MASK", "bands")

@@ -2431,6 +2431,15 @@
                 "x": {
                   "from_parameter": "x"
                 }
+              }
+            },
+            "add6": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "round2"
+                },
+                "y": 2
               },
               "result": true
             }
@@ -2611,6 +2620,103 @@
         },
         "cube2": {
           "from_node": "adddimension8"
+        }
+      }
+    },
+    "apply20": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "apply18"
+        },
+        "process": {
+          "process_graph": {
+            "round3": {
+              "process_id": "round",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                }
+              }
+            },
+            "add7": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "round3"
+                },
+                "y": 2
+              }
+            },
+            "multiply13": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "add7"
+                },
+                "y": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mask7": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "apply20"
+        },
+        "mask": {
+          "from_node": "apply19"
+        },
+        "replacement": 2
+      }
+    },
+    "mask8": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "mask7"
+        },
+        "mask": {
+          "from_node": "apply17"
+        },
+        "replacement": 1
+      }
+    },
+    "mask9": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "mask8"
+        },
+        "mask": {
+          "from_node": "reducedimension21"
+        },
+        "replacement": 3
+      }
+    },
+    "adddimension9": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask9"
+        },
+        "label": "MASK",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "mergecubes33": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes32"
+        },
+        "cube2": {
+          "from_node": "adddimension9"
         }
       },
       "result": true
