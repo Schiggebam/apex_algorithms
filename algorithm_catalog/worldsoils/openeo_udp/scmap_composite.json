@@ -2256,100 +2256,11 @@
         }
       }
     },
-    "apply17": {
-      "process_id": "apply",
-      "arguments": {
-        "data": {
-          "from_node": "reducedimension9"
-        },
-        "process": {
-          "process_graph": {
-            "gt5": {
-              "process_id": "gt",
-              "arguments": {
-                "x": {
-                  "from_parameter": "x"
-                },
-                "y": 2
-              }
-            },
-            "multiply13": {
-              "process_id": "multiply",
-              "arguments": {
-                "x": {
-                  "from_node": "gt5"
-                },
-                "y": 1
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
     "reducedimension18": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension5"
-        },
-        "dimension": "t",
-        "reducer": {
-          "process_graph": {
-            "and2": {
-              "process_id": "and",
-              "arguments": {
-                "context": {
-                  "from_parameter": "context"
-                },
-                "data": {
-                  "from_parameter": "data"
-                }
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
-    "apply18": {
-      "process_id": "apply",
-      "arguments": {
-        "data": {
-          "from_node": "reducedimension18"
-        },
-        "process": {
-          "process_graph": {
-            "multiply14": {
-              "process_id": "multiply",
-              "arguments": {
-                "x": {
-                  "from_parameter": "x"
-                },
-                "y": 2
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
-    "mergecubes30": {
-      "process_id": "merge_cubes",
-      "arguments": {
-        "cube1": {
-          "from_node": "apply17"
-        },
-        "cube2": {
-          "from_node": "apply18"
-        }
-      }
-    },
-    "reducedimension19": {
-      "process_id": "reduce_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "resamplecubespatial4"
+          "from_node": "mergecubes29"
         },
         "dimension": "bands",
         "reducer": {
@@ -2360,125 +2271,16 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 0
+                "label": "BareSoilPixelsCount"
               }
             },
-            "eq12": {
-              "process_id": "eq",
+            "gt5": {
+              "process_id": "gt",
               "arguments": {
                 "x": {
                   "from_node": "arrayelement13"
                 },
-                "y": 0
-              }
-            },
-            "eq13": {
-              "process_id": "eq",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement13"
-                },
-                "y": 50
-              }
-            },
-            "or2": {
-              "process_id": "or",
-              "arguments": {
-                "x": {
-                  "from_node": "eq12"
-                },
-                "y": {
-                  "from_node": "eq13"
-                }
-              }
-            },
-            "eq14": {
-              "process_id": "eq",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement13"
-                },
-                "y": 70
-              }
-            },
-            "or3": {
-              "process_id": "or",
-              "arguments": {
-                "x": {
-                  "from_node": "or2"
-                },
-                "y": {
-                  "from_node": "eq14"
-                }
-              }
-            },
-            "eq15": {
-              "process_id": "eq",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement13"
-                },
-                "y": 80
-              }
-            },
-            "or4": {
-              "process_id": "or",
-              "arguments": {
-                "x": {
-                  "from_node": "or3"
-                },
-                "y": {
-                  "from_node": "eq15"
-                }
-              }
-            },
-            "eq16": {
-              "process_id": "eq",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement13"
-                },
-                "y": 90
-              }
-            },
-            "or5": {
-              "process_id": "or",
-              "arguments": {
-                "x": {
-                  "from_node": "or4"
-                },
-                "y": {
-                  "from_node": "eq16"
-                }
-              }
-            },
-            "eq17": {
-              "process_id": "eq",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement13"
-                },
-                "y": 95
-              }
-            },
-            "or6": {
-              "process_id": "or",
-              "arguments": {
-                "x": {
-                  "from_node": "or5"
-                },
-                "y": {
-                  "from_node": "eq17"
-                }
-              }
-            },
-            "multiply15": {
-              "process_id": "multiply",
-              "arguments": {
-                "x": {
-                  "from_node": "or6"
-                },
-                "y": 3
+                "y": 2
               },
               "result": true
             }
@@ -2486,83 +2288,19 @@
         }
       }
     },
-    "mergecubes31": {
-      "process_id": "merge_cubes",
-      "arguments": {
-        "cube1": {
-          "from_node": "mergecubes30"
-        },
-        "cube2": {
-          "from_node": "reducedimension19"
-        }
-      }
-    },
-    "apply19": {
+    "apply17": {
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "mergecubes31"
+          "from_node": "reducedimension18"
         },
         "process": {
           "process_graph": {
-            "arrayelement14": {
-              "process_id": "array_element",
+            "round1": {
+              "process_id": "round",
               "arguments": {
-                "data": {
+                "x": {
                   "from_parameter": "x"
-                },
-                "index": 2
-              }
-            },
-            "if1": {
-              "process_id": "if",
-              "arguments": {
-                "accept": 3,
-                "reject": 0,
-                "value": {
-                  "from_node": "arrayelement14"
-                }
-              }
-            },
-            "arrayelement15": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "x"
-                },
-                "index": 1
-              }
-            },
-            "if2": {
-              "process_id": "if",
-              "arguments": {
-                "accept": 2,
-                "reject": {
-                  "from_node": "if1"
-                },
-                "value": {
-                  "from_node": "arrayelement15"
-                }
-              }
-            },
-            "arrayelement16": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "x"
-                },
-                "index": 0
-              }
-            },
-            "if3": {
-              "process_id": "if",
-              "arguments": {
-                "accept": 1,
-                "reject": {
-                  "from_node": "if2"
-                },
-                "value": {
-                  "from_node": "arrayelement16"
                 }
               },
               "result": true
@@ -2575,14 +2313,14 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "apply19"
+          "from_node": "apply17"
         },
-        "label": "MASK",
+        "label": "BareSoilMask",
         "name": "bands",
         "type": "bands"
       }
     },
-    "mergecubes32": {
+    "mergecubes30": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
