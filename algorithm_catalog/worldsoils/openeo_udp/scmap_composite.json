@@ -2254,27 +2254,6 @@
         "cube2": {
           "from_node": "adddimension5"
         }
-      }
-    },
-    "if1": {
-      "process_id": "if",
-      "arguments": {
-        "accept": 1,
-        "reject": 0,
-        "value": {
-          "from_node": "apply5"
-        }
-      }
-    },
-    "mergecubes30": {
-      "process_id": "merge_cubes",
-      "arguments": {
-        "cube1": {
-          "from_node": "mergecubes29"
-        },
-        "cube2": {
-          "from_node": "if1"
-        }
       },
       "result": true
     }

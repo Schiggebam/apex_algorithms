@@ -300,7 +300,7 @@ def composite(con: Connection,
     # is_perm_veg = is_perm_veg.if(true=2, false=0)
     # cond_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
     # mask = mask.if(cond_other, accept=3, reject=mask)
-    combined_output = combined_output.merge_cubes(out_mask)
+    # combined_output = combined_output.merge_cubes(out_mask)
 
     # s2_cube = s2_cube.apply(process=udf_process)
     # scm_composite = s2_cube.reduce_dimension(dimension='t', reducer=udf_process)
