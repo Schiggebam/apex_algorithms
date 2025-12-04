@@ -2292,12 +2292,12 @@
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "adddimension3"
+          "from_node": "reducedimension9"
         },
         "process": {
           "process_graph": {
-            "lt2": {
-              "process_id": "lt",
+            "gt5": {
+              "process_id": "gt",
               "arguments": {
                 "x": {
                   "from_parameter": "x"
@@ -2305,19 +2305,11 @@
                 "y": 3
               }
             },
-            "not1": {
-              "process_id": "not",
-              "arguments": {
-                "x": {
-                  "from_node": "lt2"
-                }
-              }
-            },
             "multiply14": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
-                  "from_node": "not1"
+                  "from_node": "gt5"
                 },
                 "y": 1
               },
@@ -2396,11 +2388,163 @@
         }
       }
     },
+    "reducedimension20": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "resamplecubespatial4"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement14": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              }
+            },
+            "eq12": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement14"
+                },
+                "y": 0
+              }
+            },
+            "eq13": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement14"
+                },
+                "y": 50
+              }
+            },
+            "or2": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "eq12"
+                },
+                "y": {
+                  "from_node": "eq13"
+                }
+              }
+            },
+            "eq14": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement14"
+                },
+                "y": 70
+              }
+            },
+            "or3": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "or2"
+                },
+                "y": {
+                  "from_node": "eq14"
+                }
+              }
+            },
+            "eq15": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement14"
+                },
+                "y": 80
+              }
+            },
+            "or4": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "or3"
+                },
+                "y": {
+                  "from_node": "eq15"
+                }
+              }
+            },
+            "eq16": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement14"
+                },
+                "y": 90
+              }
+            },
+            "or5": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "or4"
+                },
+                "y": {
+                  "from_node": "eq16"
+                }
+              }
+            },
+            "eq17": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement14"
+                },
+                "y": 95
+              }
+            },
+            "or6": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "or5"
+                },
+                "y": {
+                  "from_node": "eq17"
+                }
+              }
+            },
+            "multiply16": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "or6"
+                },
+                "y": 3
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "add8": {
+      "process_id": "add",
+      "arguments": {
+        "x": {
+          "from_node": "add7"
+        },
+        "y": {
+          "from_node": "reducedimension20"
+        }
+      }
+    },
     "adddimension6": {
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "add7"
+          "from_node": "add8"
         },
         "label": "MASK",
         "name": "bands",
