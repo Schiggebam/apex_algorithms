@@ -328,12 +328,13 @@ def composite(con: Connection,
     combined_output = combined_output.merge_cubes(is_perm_veg_named)
     combined_output = combined_output.merge_cubes(is_other_named)
 
-    is_other = is_other.multiply(3)
-    combined_mask = is_perm_veg.multiply(2)
-    combined_mask = combined_mask.add(mask_int)
-    combined_mask = combined_mask.add(is_other)
-    combined_mask = combined_mask.add_dimension("bands", "MASK", "bands")
-    combined_output = combined_output.merge_cubes(combined_mask)
+    # TODO (paul) add this
+    # is_other = is_other.multiply(3)
+    # combined_mask = is_perm_veg.multiply(2)
+    # combined_mask = combined_mask.add(mask_int)
+    # combined_mask = combined_mask.add(is_other)
+    # combined_mask = combined_mask.add_dimension("bands", "MASK", "bands")
+    # combined_output = combined_output.merge_cubes(combined_mask)
 
     # mask_cube = is_soil.merge_cubes(is_perm_veg)
     # mask_cube = mask_cube.merge_cubes(is_other)
