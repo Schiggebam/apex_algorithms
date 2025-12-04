@@ -2335,7 +2335,50 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension5"
+          "from_node": "mergecubes2"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement14": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 10
+              }
+            },
+            "arrayelement15": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 11
+              }
+            },
+            "lt2": {
+              "process_id": "lt",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement14"
+                },
+                "y": {
+                  "from_node": "arrayelement15"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "reducedimension20": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension19"
         },
         "dimension": "t",
         "reducer": {
@@ -2353,32 +2396,19 @@
         }
       }
     },
+    "not1": {
+      "process_id": "not",
+      "arguments": {
+        "x": {
+          "from_node": "reducedimension20"
+        }
+      }
+    },
     "apply18": {
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "reducedimension19"
-        },
-        "process": {
-          "process_graph": {
-            "not1": {
-              "process_id": "not",
-              "arguments": {
-                "x": {
-                  "from_parameter": "x"
-                }
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
-    "apply19": {
-      "process_id": "apply",
-      "arguments": {
-        "data": {
-          "from_node": "apply18"
+          "from_node": "not1"
         },
         "process": {
           "process_graph": {
@@ -2399,7 +2429,7 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "apply19"
+          "from_node": "apply18"
         },
         "label": "PermanentVeg",
         "name": "bands",
@@ -2417,7 +2447,7 @@
         }
       }
     },
-    "reducedimension20": {
+    "reducedimension21": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -2426,7 +2456,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement14": {
+            "arrayelement16": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -2439,7 +2469,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement14"
+                  "from_node": "arrayelement16"
                 },
                 "y": 0
               }
@@ -2448,7 +2478,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement14"
+                  "from_node": "arrayelement16"
                 },
                 "y": 50
               }
@@ -2468,7 +2498,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement14"
+                  "from_node": "arrayelement16"
                 },
                 "y": 70
               }
@@ -2488,7 +2518,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement14"
+                  "from_node": "arrayelement16"
                 },
                 "y": 80
               }
@@ -2508,7 +2538,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement14"
+                  "from_node": "arrayelement16"
                 },
                 "y": 90
               }
@@ -2528,7 +2558,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement14"
+                  "from_node": "arrayelement16"
                 },
                 "y": 95
               }
@@ -2553,7 +2583,7 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension20"
+          "from_node": "reducedimension21"
         },
         "label": "MaskOther",
         "name": "bands",
