@@ -313,12 +313,12 @@ def composite(con: Connection,
     mask_int = mask.apply(process=openeo.processes.round)
 
     # Add as a new band
-    mask_int = mask_int.add_dimension("bands", "BareSoilMask", "bands")
-    is_perm_veg = is_perm_veg.add_dimension("bands", "PermanentVeg", "bands")
+    mask_int_named = mask_int.add_dimension("bands", "BareSoilMask", "bands")
+    is_perm_veg_named = is_perm_veg.add_dimension("bands", "PermanentVeg", "bands")
 
     # Merge into existing cube
-    combined_output = combined_output.merge_cubes(mask_int)
-    combined_output = combined_output.merge_cubes(is_perm_veg)
+    combined_output = combined_output.merge_cubes(mask_int_named)
+    combined_output = combined_output.merge_cubes(is_perm_veg_named)
 
     combined_mask = is_perm_veg.multiply(2)
     combined_mask = add(combined_mask, mask_int)
