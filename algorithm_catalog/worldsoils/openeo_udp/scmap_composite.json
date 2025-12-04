@@ -2399,20 +2399,33 @@
         }
       }
     },
-    "multiply13": {
-      "process_id": "multiply",
+    "apply19": {
+      "process_id": "apply",
       "arguments": {
-        "x": {
+        "data": {
           "from_node": "adddimension7"
         },
-        "y": 2
+        "process": {
+          "process_graph": {
+            "multiply13": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 2
+              },
+              "result": true
+            }
+          }
+        }
       }
     },
     "add6": {
       "process_id": "add",
       "arguments": {
         "x": {
-          "from_node": "multiply13"
+          "from_node": "apply19"
         },
         "y": {
           "from_node": "adddimension6"
