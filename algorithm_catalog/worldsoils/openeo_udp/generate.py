@@ -293,15 +293,15 @@ def composite(con: Connection,
 
  
     # TODO (paul) this works (but maybe slow????)
-    # masked = s2_merged.band("pvir2") < th
-    # is_perm_veg = masked.reduce_dimension(dimension="t", reducer="any")
-    # is_perm_veg = is_perm_veg.apply(process=openeo.processes.not_)
-    # is_perm_veg = is_perm_veg.apply(process=openeo.processes.round)
-    # is_perm_veg = is_perm_veg.add(2)
+    masked = s2_merged.band("pvir2") < th
+    is_perm_veg = masked.reduce_dimension(dimension="t", reducer="any")
+    is_perm_veg = is_perm_veg.apply(process=openeo.processes.not_)
+    is_perm_veg = is_perm_veg.apply(process=openeo.processes.round)
+    is_perm_veg = is_perm_veg.add(2)
 
     # TODO test
-    masked = s2_merged.band("pvir2") > th
-    is_perm_veg = masked.reduce_dimension(dimension="t", reducer="all")     # TODO doesn't work because of nans (but should work with ignore_nodata=true)
+    # masked = s2_merged.band("pvir2") > th
+    # is_perm_veg = masked.reduce_dimension(dimension="t", reducer="all")     # TODO doesn't work because of nans (but should work with ignore_nodata=true)
     
     worldcover = worldcover.band("MAP")
     is_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
@@ -313,7 +313,7 @@ def composite(con: Connection,
 
     # Convert boolean → int32
     # mask_int = mask.apply(process=openeo.processes.round)
-    is_other.apply(process=openeo.processes.round)
+    # is_other.apply(process=openeo.processes.round)
 
     # # Add as a new band
     # mask_int_named = mask_int.add_dimension("bands", "BareSoilMask", "bands")
@@ -329,7 +329,7 @@ def composite(con: Connection,
     # is_perm_veg = is_perm_veg.add(2)
     z = is_perm_veg.multiply(0)
     z = z.mask(is_perm_veg, replacement=2)
-    z = z.mask((bspc > 2), replacement=1)       # changed this
+    z = z.mask((bspc > 2), replacement=1)       
     z = z.mask(is_other, replacement=3)
     z = z.add_dimension("bands", "MASK", "bands")
     combined_output = combined_output.merge_cubes(z)

@@ -2283,8 +2283,8 @@
                 "index": 11
               }
             },
-            "gt5": {
-              "process_id": "gt",
+            "lt2": {
+              "process_id": "lt",
               "arguments": {
                 "x": {
                   "from_node": "arrayelement13"
@@ -2308,8 +2308,8 @@
         "dimension": "t",
         "reducer": {
           "process_graph": {
-            "all1": {
-              "process_id": "all",
+            "any2": {
+              "process_id": "any",
               "arguments": {
                 "data": {
                   "from_parameter": "data"
@@ -2329,13 +2329,81 @@
         },
         "process": {
           "process_graph": {
+            "not1": {
+              "process_id": "not",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply18": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "apply17"
+        },
+        "process": {
+          "process_graph": {
+            "round1": {
+              "process_id": "round",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                }
+              }
+            },
+            "add6": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "round1"
+                },
+                "y": 2
+              }
+            },
             "multiply13": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
-                  "from_parameter": "x"
+                  "from_node": "add6"
                 },
                 "y": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply19": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "apply17"
+        },
+        "process": {
+          "process_graph": {
+            "round2": {
+              "process_id": "round",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                }
+              }
+            },
+            "add7": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "round2"
+                },
+                "y": 2
               },
               "result": true
             }
@@ -2347,10 +2415,10 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "apply17"
+          "from_node": "apply18"
         },
         "mask": {
-          "from_node": "reducedimension19"
+          "from_node": "apply19"
         },
         "replacement": 2
       }
@@ -2373,7 +2441,7 @@
                 "label": "BareSoilPixelsCount"
               }
             },
-            "gt6": {
+            "gt5": {
               "process_id": "gt",
               "arguments": {
                 "x": {
