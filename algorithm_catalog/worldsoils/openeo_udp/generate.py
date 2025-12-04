@@ -292,39 +292,44 @@ def composite(con: Connection,
     combined_output = combined_output.merge_cubes(sfreq_freq)
 
  
-    masked = s2_merged.band("pvir2") < th
-    is_perm_veg = masked.reduce_dimension(dimension="t", reducer="any")
-    is_perm_veg = is_perm_veg.apply(process=openeo.processes.not_)
-    # is_perm_veg = mask.reduce_dimension(dimension="t", reducer="all")     # doesn't work because of nans
-    is_perm_veg = is_perm_veg.apply(process=openeo.processes.round)
-    is_perm_veg = is_perm_veg.add(2)
+    # TODO (paul) this works (but maybe slow????)
+    # masked = s2_merged.band("pvir2") < th
+    # is_perm_veg = masked.reduce_dimension(dimension="t", reducer="any")
+    # is_perm_veg = is_perm_veg.apply(process=openeo.processes.not_)
+    # is_perm_veg = is_perm_veg.apply(process=openeo.processes.round)
+    # is_perm_veg = is_perm_veg.add(2)
+
+    # TODO test
+    masked = s2_merged.band("pvir2") > th
+    is_perm_veg = masked.reduce_dimension(dimension="t", reducer="all")     # TODO doesn't work because of nans (but should work with ignore_nodata=true)
+    
     worldcover = worldcover.band("MAP")
     is_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
     
     bspc = combined_output.band("BareSoilPixelsCount")   # (x,y) or (x,y,t)
 
     # Boolean mask
-    mask = bspc > 2
+    # mask = bspc > 2
 
     # Convert boolean → int32
-    mask_int = mask.apply(process=openeo.processes.round)
+    # mask_int = mask.apply(process=openeo.processes.round)
     is_other.apply(process=openeo.processes.round)
 
-    # Add as a new band
-    mask_int_named = mask_int.add_dimension("bands", "BareSoilMask", "bands")
-    is_perm_veg_named = is_perm_veg.add_dimension("bands", "PermanentVeg", "bands")
-    is_other_named = is_other.add_dimension("bands", "MaskOther", "bands")
+    # # Add as a new band
+    # mask_int_named = mask_int.add_dimension("bands", "BareSoilMask", "bands")
+    # is_perm_veg_named = is_perm_veg.add_dimension("bands", "PermanentVeg", "bands")
+    # is_other_named = is_other.add_dimension("bands", "MaskOther", "bands")
 
-    # Merge into existing cube
-    combined_output = combined_output.merge_cubes(mask_int_named)
-    combined_output = combined_output.merge_cubes(is_perm_veg_named)
-    combined_output = combined_output.merge_cubes(is_other_named)
+    # # Merge into existing cube
+    # combined_output = combined_output.merge_cubes(mask_int_named)
+    # combined_output = combined_output.merge_cubes(is_perm_veg_named)
+    # combined_output = combined_output.merge_cubes(is_other_named)
 
-    # TODO (paul) add this
+    # TODO (paul) replace mask_int with bscp > 2 
     # is_perm_veg = is_perm_veg.add(2)
     z = is_perm_veg.multiply(0)
     z = z.mask(is_perm_veg, replacement=2)
-    z = z.mask(mask_int, replacement=1)
+    z = z.mask((bspc > 2), replacement=1)       # changed this
     z = z.mask(is_other, replacement=3)
     z = z.add_dimension("bands", "MASK", "bands")
     combined_output = combined_output.merge_cubes(z)
