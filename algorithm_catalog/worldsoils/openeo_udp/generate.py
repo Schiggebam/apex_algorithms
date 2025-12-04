@@ -293,7 +293,8 @@ def composite(con: Connection,
 
  
     masked = s2_merged.band("pvir2") < th
-    is_perm_veg = not_(masked.reduce_dimension(dimension="t", reducer="any"))
+    is_perm_veg = masked.reduce_dimension(dimension="t", reducer="any")
+    is_perm_veg = is_perm_veg.apply(process=openeo.processes.not_)
     # is_perm_veg = mask.reduce_dimension(dimension="t", reducer="all")     # doesn't work because of nans
     is_perm_veg = is_perm_veg.apply(process=openeo.processes.round)
     worldcover = worldcover.band("MAP")

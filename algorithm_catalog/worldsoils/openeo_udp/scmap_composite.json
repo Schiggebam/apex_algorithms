@@ -2396,19 +2396,32 @@
         }
       }
     },
-    "not1": {
-      "process_id": "not",
-      "arguments": {
-        "x": {
-          "from_node": "reducedimension20"
-        }
-      }
-    },
     "apply18": {
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "not1"
+          "from_node": "reducedimension20"
+        },
+        "process": {
+          "process_graph": {
+            "not1": {
+              "process_id": "not",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply19": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "apply18"
         },
         "process": {
           "process_graph": {
@@ -2429,7 +2442,7 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "apply18"
+          "from_node": "apply19"
         },
         "label": "PermanentVeg",
         "name": "bands",
