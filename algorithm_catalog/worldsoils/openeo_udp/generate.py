@@ -5,7 +5,7 @@ from pathlib import Path
 import openeo
 from openeo.api.process import Parameter
 from openeo.processes import array_create, and_, if_, inspect
-from openeo.processes import sqrt as sqrt_
+from openeo.processes import sqrt as sqrt_, add, multiply, subtract
 from openeo.rest.udp import build_process_dict
 from openeo.rest.connection import Connection
 
@@ -294,9 +294,21 @@ def composite(con: Connection,
 
     ## MASK ##
     # output_mask = cond_count.if(false=1, true=0)
-    is_soil = cond_count
-    is_perm_veg = mask.reduce_dimension(dimension="t", reducer="and")
-    out_mask = if_(value=is_soil, accept=1, reject=0)
+    ref = combined_output.band(RES_BANDS["SFREQ-COUNT"])        # x, y
+    
+    is_soil = (~cond_count).multiply(1)
+    is_perm_veg = mask.reduce_dimension(dimension="t", reducer="and").multiply(2)
+
+    # is_perm_veg = is_perm_veg
+    
+    out_mask = ref.multiply(0)
+    out_mask = add(out_mask, is_soil)
+    out_mask = add(out_mask, is_perm_veg)
+    out_mask = out_mask.rename_labels("bands", target=["MASK"])
+
+    combined_output.merge_cubes(out_mask)
+    
+    # out_mask = if_(value=is_soil, accept=1, reject=0)
     # is_perm_veg = is_perm_veg.if(true=2, false=0)
     # cond_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
     # mask = mask.if(cond_other, accept=3, reject=mask)
