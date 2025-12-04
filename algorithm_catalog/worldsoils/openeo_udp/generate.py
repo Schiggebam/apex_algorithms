@@ -298,15 +298,18 @@ def composite(con: Connection,
     
     is_soil = (~cond_count).multiply(1)
     is_perm_veg = mask.reduce_dimension(dimension="t", reducer="and").multiply(2)
+    is_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
+    is_other = is_other.multiply(3)
 
     # is_perm_veg = is_perm_veg
     
     out_mask = ref.multiply(0)
     out_mask = add(out_mask, is_soil)
     out_mask = add(out_mask, is_perm_veg)
+    out_mask = add(out_mask, is_other)
     out_mask = out_mask.rename_labels("bands", target=["MASK"])
 
-    combined_output.merge_cubes(out_mask)
+    combined_output = combined_output.merge_cubes(out_mask)
     
     # out_mask = if_(value=is_soil, accept=1, reject=0)
     # is_perm_veg = is_perm_veg.if(true=2, false=0)
