@@ -290,14 +290,13 @@ def composite(con: Connection,
     
     combined_output = combined_output.merge_cubes(sfreq_freq)
 
-    print(inspect(combined_output))
-
     ## MASK ##
     # output_mask = cond_count.if(false=1, true=0)
     ref = combined_output.band(RES_BANDS["SFREQ-COUNT"])        # x, y
     
     is_soil = (~cond_count).multiply(1)
-    is_perm_veg = mask.reduce_dimension(dimension="t", reducer="and").multiply(2)
+    is_perm_veg = mask.reduce_dimension(dimension="t", reducer="and").multiply(2)       # from pvir2 condition
+    worldcover = worldcover.reduce_dimension(dimension="bands", reducer="first")
     is_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
     is_other = is_other.multiply(3)
 

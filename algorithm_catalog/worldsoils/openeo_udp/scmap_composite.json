@@ -2396,11 +2396,33 @@
         }
       }
     },
+    "reducedimension20": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "resamplecubespatial4"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "first3": {
+              "process_id": "first",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
     "apply19": {
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial4"
+          "from_node": "reducedimension20"
         },
         "process": {
           "process_graph": {
@@ -2422,7 +2444,7 @@
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial4"
+          "from_node": "reducedimension20"
         },
         "process": {
           "process_graph": {
@@ -2471,7 +2493,7 @@
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial4"
+          "from_node": "reducedimension20"
         },
         "process": {
           "process_graph": {
@@ -2520,7 +2542,7 @@
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial4"
+          "from_node": "reducedimension20"
         },
         "process": {
           "process_graph": {
@@ -2569,7 +2591,7 @@
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial4"
+          "from_node": "reducedimension20"
         },
         "process": {
           "process_graph": {
@@ -2618,7 +2640,7 @@
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial4"
+          "from_node": "reducedimension20"
         },
         "process": {
           "process_graph": {
