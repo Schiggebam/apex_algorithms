@@ -321,7 +321,7 @@ def composite(con: Connection,
     combined_output = combined_output.merge_cubes(is_perm_veg_named)
 
     combined_mask = is_perm_veg.multiply(2)
-    combined_mask = add(combined_mask, mask_int)
+    combined_mask = combined_mask.add(mask_int)
     combined_mask = combined_mask.add_dimension("bands", "MASK", "bands")
     combined_output = combined_output.merge_cubes(combined_mask)
 

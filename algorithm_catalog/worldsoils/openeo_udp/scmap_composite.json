@@ -2429,14 +2429,30 @@
         }
       }
     },
-    "add6": {
-      "process_id": "add",
+    "mergecubes32": {
+      "process_id": "merge_cubes",
       "arguments": {
-        "x": {
+        "cube1": {
           "from_node": "apply19"
         },
-        "y": {
+        "cube2": {
           "from_node": "apply17"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "add6": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "y"
+                }
+              },
+              "result": true
+            }
+          }
         }
       }
     },
@@ -2444,14 +2460,14 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "add6"
+          "from_node": "mergecubes32"
         },
         "label": "MASK",
         "name": "bands",
         "type": "bands"
       }
     },
-    "mergecubes32": {
+    "mergecubes33": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
