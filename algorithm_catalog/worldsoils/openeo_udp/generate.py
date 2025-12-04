@@ -297,6 +297,7 @@ def composite(con: Connection,
     is_soil = (~cond_count).multiply(1)
     is_perm_veg = mask.reduce_dimension(dimension="t", reducer="and").multiply(2)       # from pvir2 condition
     
+    worldcover = worldcover.band("MAP")
     is_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
     is_other = is_other.multiply(3)
 
