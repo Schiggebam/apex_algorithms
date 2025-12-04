@@ -302,7 +302,7 @@ def composite(con: Connection,
     # is_other = (worldcover == 0) | (worldcover == 50) | (worldcover == 70) | (worldcover == 80) | (worldcover == 90) | (worldcover == 95)
     # is_other = is_other.multiply(3)
 # 
-    is_perm_veg = mask.reduce_dimension(dimension="t", reducer="and")
+    is_perm_veg = mask.reduce_dimension(dimension="t", reducer="all")
     is_perm_veg = is_perm_veg.apply(process=openeo.processes.round)
     bspc = combined_output.band("BareSoilPixelsCount")   # (x,y) or (x,y,t)
 

@@ -2340,12 +2340,9 @@
         "dimension": "t",
         "reducer": {
           "process_graph": {
-            "and2": {
-              "process_id": "and",
+            "all1": {
+              "process_id": "all",
               "arguments": {
-                "context": {
-                  "from_parameter": "context"
-                },
                 "data": {
                   "from_parameter": "data"
                 }
