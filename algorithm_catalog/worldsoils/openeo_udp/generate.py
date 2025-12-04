@@ -292,7 +292,7 @@ def composite(con: Connection,
 
     ## MASK ##
     # output_mask = cond_count.if(false=1, true=0)
-    ref = add(combined_output.band(RES_BANDS["SFREQ-COUNT"]), 0)        # x, y
+    ref = combined_output.band(RES_BANDS["SFREQ-COUNT"])        # x, y
 
     is_soil = (~cond_count).multiply(1)
     is_perm_veg = mask.reduce_dimension(dimension="t", reducer="and").multiply(2)       # from pvir2 condition
@@ -306,7 +306,7 @@ def composite(con: Connection,
     out_mask = ref.multiply(0)
     out_mask = add(out_mask, is_soil)
     out_mask = add(out_mask, is_perm_veg)
-    out_mask = add(out_mask, is_other)
+    # out_mask = add(out_mask, is_other)
     # out_mask = out_mask.rename_labels("bands", target=["MASK"])
     out_mask = out_mask.add_dimension(name="bands", label="MASK", type="bands")
 
