@@ -2272,20 +2272,29 @@
                   "from_parameter": "data"
                 },
                 "label": "BareSoilPixelsCount"
-              }
-            },
-            "multiply13": {
-              "process_id": "multiply",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement13"
-                },
-                "y": 0
               },
               "result": true
             }
           }
         }
+      }
+    },
+    "add6": {
+      "process_id": "add",
+      "arguments": {
+        "x": {
+          "from_node": "reducedimension18"
+        },
+        "y": 0
+      }
+    },
+    "multiply13": {
+      "process_id": "multiply",
+      "arguments": {
+        "x": {
+          "from_node": "add6"
+        },
+        "y": 0
       }
     },
     "apply17": {
@@ -2327,11 +2336,11 @@
         }
       }
     },
-    "add6": {
+    "add7": {
       "process_id": "add",
       "arguments": {
         "x": {
-          "from_node": "reducedimension18"
+          "from_node": "multiply13"
         },
         "y": {
           "from_node": "apply17"
@@ -2385,11 +2394,11 @@
         }
       }
     },
-    "add7": {
+    "add8": {
       "process_id": "add",
       "arguments": {
         "x": {
-          "from_node": "add6"
+          "from_node": "add7"
         },
         "y": {
           "from_node": "apply18"
@@ -2537,11 +2546,11 @@
         }
       }
     },
-    "add8": {
+    "add9": {
       "process_id": "add",
       "arguments": {
         "x": {
-          "from_node": "add7"
+          "from_node": "add8"
         },
         "y": {
           "from_node": "reducedimension20"
@@ -2552,7 +2561,7 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "add8"
+          "from_node": "add9"
         },
         "label": "MASK",
         "name": "bands",
