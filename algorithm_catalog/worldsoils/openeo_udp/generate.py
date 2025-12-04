@@ -331,6 +331,7 @@ def composite(con: Connection,
     z = z.mask(is_perm_veg, replacement=2)
     z = z.mask((bspc > 2), replacement=1)       
     z = z.mask(is_other, replacement=3)
+    z = z.mask((z==0))
     z = z.add_dimension("bands", "MASK", "bands")
     combined_output = combined_output.merge_cubes(z)
 

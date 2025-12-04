@@ -2611,11 +2611,44 @@
         "replacement": 3
       }
     },
+    "apply20": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "mask9"
+        },
+        "process": {
+          "process_graph": {
+            "eq18": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mask10": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "mask9"
+        },
+        "mask": {
+          "from_node": "apply20"
+        }
+      }
+    },
     "adddimension6": {
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "mask9"
+          "from_node": "mask10"
         },
         "label": "MASK",
         "name": "bands",
